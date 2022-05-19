@@ -1,5 +1,5 @@
-# dzBridge-Unity
-A renewed DazToUnity Bridge based on Daz Bridge Library, allowing transfer of Daz Studio characters and props to the Unity game engine.
+# DazToUnity
+A Daz Studio Plugin based on Daz Bridge Library, allowing transfer of Daz Studio characters and props to the Unity game engine.
 
 # Table of Contents
 1. About the Bridge
