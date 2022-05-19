@@ -1,0 +1,19 @@
+======= UnitTest Details =======
+
+
+======= UnitTest Summary =======
+
+Class Name: DzUnityAction
+Number of UnitTests: 9
+
+[ 0] _DzBridgeUnityAction:.[ PASSED ]
+[ 1] setInstallUnityFiles:.[ PASSED ]
+[ 2] getInstallUnityFiles:.[ PASSED ]
+[ 3] executeAction:........[ PASSED ]
+[ 4] createUI:.............[ PASSED ]
+[ 5] writeConfiguration:...[ PASSED ]
+[ 6] setExportOptions:.....[ PASSED ]
+[ 7] createUnityFiles:.....[ PASSED ]
+[ 8] readGuiRootFolder:....[ PASSED ]
+
+End of Report.

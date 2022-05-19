@@ -1,0 +1,44 @@
+// DAZ Studio version 4.16.0.3 filetype DAZ Script
+var includeDir_oFILE = new DzFile( getScriptFileName() );
+//var sIncludePath = includeDir_oFILE.path();
+var sIncludePath = "C:/GitHub/dzBridge-Unity/Test/UnitTests/"
+var sOutputPath = "C:/GitHub/dzBridge-Unity/Test/Results/";
+
+/*
+obj = new UnitTest_DzBridgeScriptableAction();
+result = false;
+result = obj.runUnitTests();
+print("Unit Test Results (DzBridgeAction): " + result);
+obj.writeAllTestResults(sOutputPath);
+
+obj = new UnitTest_DzBridgeDialog();
+result = false;
+result = obj.runUnitTests();
+print("Unit Test Results (DzBridgeDialog): " + result);
+obj.writeAllTestResults(sOutputPath);
+
+obj = new UnitTest_DzBridgeMorphSelectionDialog();
+result = false;
+result = obj.runUnitTests();
+print("Unit Test Results (DzBridgeMorphSelectionDialog): " + result);
+obj.writeAllTestResults(sOutputPath);
+
+obj = new UnitTest_DzBridgeSubdivisionDialog();
+result = false;
+result = obj.runUnitTests();
+print("Unit Test Results (DzBridgeSubdivisionDialog): " + result);
+obj.writeAllTestResults(sOutputPath);
+*/
+
+obj = new UnitTest_DzUnityAction();
+result = false;
+result = obj.runUnitTests();
+print("Unit Test Results (DzBridgeUnityAction): " + result);
+obj.writeAllTestResults(sOutputPath);
+
+obj = new UnitTest_DzUnityDialog();
+result = false;
+result = obj.runUnitTests();
+print("Unit Test Results (DzBridgeUnityDialog): " + result);
+obj.writeAllTestResults(sOutputPath);
+

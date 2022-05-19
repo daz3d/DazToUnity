@@ -1,0 +1,11 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/DazBridgeUnity">
+        <file alias="daztounity-hdrp.unitypackage">DazToUnity-HDRP.unitypackage</file>
+        <file alias="daztounity-urp.unitypackage">DazToUnity-URP.unitypackage</file>
+        <file alias="daztounity-standard-shader.unitypackage">DazToUnity-Standard-Shader.unitypackage</file>
+    </qresource>
+    <qresource prefix="/DazBridgeUnity/Images">
+        <file alias="icon">Images/Icon.png</file>
+    </qresource>
+</RCC>

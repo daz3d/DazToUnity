@@ -1,0 +1,55 @@
+{
+	"UnitTest Results Version" : 1,
+	"Class Name" : "DzUnityDialog",
+	"Number of UnitTests" : 8,
+	"Detailed Test Results" : [
+		{
+			"UnitTest ID" : 0,
+			"Method Name" : "_DzBridgeUnityDialog",
+			"Test Result" : true,
+			"Test Log" : ""
+		},
+		{
+			"UnitTest ID" : 1,
+			"Method Name" : "getAssetsFolderEdit",
+			"Test Result" : true,
+			"Test Log" : ""
+		},
+		{
+			"UnitTest ID" : 2,
+			"Method Name" : "resetToDefaults",
+			"Test Result" : true,
+			"Test Log" : ""
+		},
+		{
+			"UnitTest ID" : 3,
+			"Method Name" : "loadSavedSettings",
+			"Test Result" : true,
+			"Test Log" : ""
+		},
+		{
+			"UnitTest ID" : 4,
+			"Method Name" : "HandleSelectAssetsFolderButton",
+			"Test Result" : true,
+			"Test Log" : ""
+		},
+		{
+			"UnitTest ID" : 5,
+			"Method Name" : "HandleInstallUnityFilesCheckBoxChange",
+			"Test Result" : true,
+			"Test Log" : ""
+		},
+		{
+			"UnitTest ID" : 6,
+			"Method Name" : "HandleAssetTypeComboChange",
+			"Test Result" : true,
+			"Test Log" : ""
+		},
+		{
+			"UnitTest ID" : 7,
+			"Method Name" : "HandleAssetFolderChanged",
+			"Test Result" : true,
+			"Test Log" : ""
+		}
+	]
+}
