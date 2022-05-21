@@ -1,0 +1,18 @@
+======= UnitTest Details =======
+
+
+======= UnitTest Summary =======
+
+Class Name: DzUnityDialog
+Number of UnitTests: 8
+
+[ 0] _DzBridgeUnityDialog:..................[ PASSED ]
+[ 1] getAssetsFolderEdit:...................[ PASSED ]
+[ 2] resetToDefaults:.......................[ PASSED ]
+[ 3] loadSavedSettings:.....................[ PASSED ]
+[ 4] HandleSelectAssetsFolderButton:........[ PASSED ]
+[ 5] HandleInstallUnityFilesCheckBoxChange:.[ PASSED ]
+[ 6] HandleAssetTypeComboChange:............[ PASSED ]
+[ 7] HandleAssetFolderChanged:..............[ PASSED ]
+
+End of Report.
