@@ -1,192 +1,96 @@
 {
 	"TestCase ID": "TC01",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:20:11 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 1:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC01/Genesis8Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC01/Genesis8Female.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC02",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:20:21 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 2:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC02/Genesis81Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC02/Genesis81Female.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC03",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:20:42 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 3:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC03/CustomSceneLabel.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC03/CustomSceneLabel.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC04",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:20:57 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 4:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC04/CustomAssetName.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC04/CustomAssetName.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC05",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:21:15 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 5:\nExported DTU = C:/CustomRoot/Genesis81Female/Genesis81Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/CustomRoot/Genesis81Female/Genesis81Female.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC06",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:21:34 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 6:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC06/Genesis81Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC06/Genesis81Female.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC07",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:22:48 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 7:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC07/Genesis81Female.dtu\nDTU: Valid JSON format [OK].\nDTU Subdivision Settings: Genesis8_1Female.Shape: Subdivision Level=3\nExported FBX HD = C:/Users/dbui/Documents/DazToUnity/TC07/Genesis81Female.fbx\nFBX fileformat check passed: valid FBX file\nExported FBX base = C:/Users/dbui/Documents/DazToUnity/TC07/Genesis81Female_base.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC08",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:23:07 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 8:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC08/QATestScene01.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC08/QATestScene01.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC09",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:23:30 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 9:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC09/Victoria81.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC09/Victoria81.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC10",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:24:52 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 10:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC10/Victoria81.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC10/Victoria81.fbx\nFBX fileformat check passed: valid FBX file\nLIE texture found: d10.png:\n  - valid image format. [OK]\nLIE texture found: d11.png:\n  - valid image format. [OK]\nLIE texture found: d12.png:\n  - valid image format. [OK]\nLIE texture found: d13.png:\n  - valid image format. [OK]\nLIE texture found: d14.png:\n  - valid image format. [OK]\nLIE texture found: d15.png:\n  - valid image format. [OK]\nLIE texture found: d16.png:\n  - valid image format. [OK]\nLIE texture found: d17.png:\n  - valid image format. [OK]\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC11",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:25:05 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 11:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC11/Genesis8Male.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC11/Genesis8Male.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC12",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:25:09 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 12:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC12/Genesis81Male.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC12/Genesis81Male.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC13",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:25:13 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 13:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC13/Genesis3Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC13/Genesis3Female.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC14",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:25:19 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 14:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC14/Genesis3Male.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC14/Genesis3Male.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC15",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:25:22 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 15:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC15/Genesis2Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC15/Genesis2Female.fbx\nFBX fileformat check passed: valid FBX file\n"
+	"Time": "",
+	"Test Log": ""
 }
 {
 	"TestCase ID": "TC16",
 	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:25:27 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 16:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC16/Genesis2Male.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC16/Genesis2Male.fbx\nFBX fileformat check passed: valid FBX file\nLIE texture found: d18.png:\n  - valid image format. [OK]\n"
-}
-{
-	"TestCase ID": "TC01",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:40:16 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 1:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC01/Genesis8Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC01/Genesis8Female.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC02",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:40:26 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 2:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC02/Genesis81Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC02/Genesis81Female.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC03",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:40:45 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 3:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC03/CustomSceneLabel.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC03/CustomSceneLabel.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC04",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:40:59 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 4:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC04/CustomAssetName.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC04/CustomAssetName.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC05",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:41:14 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 5:\nExported DTU = C:/CustomRoot/Genesis81Female/Genesis81Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/CustomRoot/Genesis81Female/Genesis81Female.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC06",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:41:29 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 6:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC06/Genesis81Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC06/Genesis81Female.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC07",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:42:34 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 7:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC07/Genesis81Female.dtu\nDTU: Valid JSON format [OK].\nDTU Subdivision Settings: Genesis8_1Female.Shape: Subdivision Level=3\nExported FBX HD = C:/Users/dbui/Documents/DazToUnity/TC07/Genesis81Female.fbx\nFBX fileformat check passed: valid FBX file\nExported FBX base = C:/Users/dbui/Documents/DazToUnity/TC07/Genesis81Female_base.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC08",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:42:49 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 8:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC08/QATestScene01.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC08/QATestScene01.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC09",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:43:09 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 9:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC09/Victoria81.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC09/Victoria81.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC10",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:44:27 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 10:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC10/Victoria81.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC10/Victoria81.fbx\nFBX fileformat check passed: valid FBX file\nLIE texture found: d10.png:\n  - valid image format. [OK]\nLIE texture found: d11.png:\n  - valid image format. [OK]\nLIE texture found: d12.png:\n  - valid image format. [OK]\nLIE texture found: d13.png:\n  - valid image format. [OK]\nLIE texture found: d14.png:\n  - valid image format. [OK]\nLIE texture found: d15.png:\n  - valid image format. [OK]\nLIE texture found: d16.png:\n  - valid image format. [OK]\nLIE texture found: d17.png:\n  - valid image format. [OK]\n"
-}
-{
-	"TestCase ID": "TC11",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:44:40 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 11:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC11/Genesis8Male.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC11/Genesis8Male.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC12",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:44:44 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 12:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC12/Genesis81Male.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC12/Genesis81Male.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC13",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:44:49 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 13:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC13/Genesis3Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC13/Genesis3Female.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC14",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:44:54 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 14:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC14/Genesis3Male.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC14/Genesis3Male.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC15",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:44:58 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 15:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC15/Genesis2Female.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC15/Genesis2Female.fbx\nFBX fileformat check passed: valid FBX file\n"
-}
-{
-	"TestCase ID": "TC16",
-	"Test Result": true,
-	"Time": "Tue Mar 22 2022 06:45:03 GMT-0400 (Eastern Daylight Time)",
-	"Test Log": "Running Test Case 16:\nExported DTU = C:/Users/dbui/Documents/DazToUnity/TC16/Genesis2Male.dtu\nDTU: Valid JSON format [OK].\nExported FBX = C:/Users/dbui/Documents/DazToUnity/TC16/Genesis2Male.fbx\nFBX fileformat check passed: valid FBX file\nLIE texture found: d18.png:\n  - valid image format. [OK]\n"
+	"Time": "",
+	"Test Log": ""
 }

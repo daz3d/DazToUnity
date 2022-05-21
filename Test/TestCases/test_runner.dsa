@@ -1,9 +1,9 @@
 // DAZ Studio version 4.16.0.3 filetype DAZ Script
 var includeDir_oFILE = new DzFile( getScriptFileName() );
 //var sIncludePath = includeDir_oFILE.path();
-var sIncludePath = "C:/GitHub/dzBridge-Unity/Test/TestCases/"
+var sIncludePath = "C:/GitHub/DazToUnity-daz3d/Test/TestCases/"
 
-Global_sOutputPath = "C:/GitHub/dzBridge-Unity/Test/Results/";
+Global_sOutputPath = "C:/GitHub/DazToUnity-daz3d/Test/Results/";
 
 include(sIncludePath + "TC01.dsa")
 include(sIncludePath + "TC02.dsa")
@@ -32,6 +32,7 @@ function main()
 	Run_TestCase_03("/people/genesis 8 female/genesis 8.1 basic female.duf");
 
 	clearLog();
+	clearJson();
 	var i=0;
 	aTCResults[i] = logToJson("TC01", Run_TestCase_01("/people/genesis 8 female/genesis 8 basic female.duf"));
 	i++;
@@ -66,6 +67,7 @@ function main()
 	i++;
 	aTCResults[i] = logToJson("TC16", Run_TestCase_16("people/genesis 2 male/genesis 2 base male.duf"));
 
+	clearLog();
 	printToLog("\n");
 	printToLog("=======================");
 	printToLog("Automated Test Results:");
@@ -82,6 +84,8 @@ function main()
 			printToLog("Test Case " + (i+1) + ": **FAILED**");
 		}
 	}
+	writeLogToReport();
+	clearLog();
 
 }
 
