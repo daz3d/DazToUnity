@@ -55,9 +55,8 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 int btnMinWidth = style()->pixelMetric(DZ_PM_ButtonMinWidth);
 
 	 // Set the dialog title
-	 int revision = PLUGIN_REV % 1000;
-#ifdef _DEBUG
-	 setWindowTitle(tr("DazToUnity Bridge v%1.%2 Pre-Release Build %3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(revision).arg(PLUGIN_BUILD));
+#ifdef _PRE_RELEASE
+	 setWindowTitle(tr("DazToUnity Bridge v%1.%2 Pre-Release Build %3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD));
 #else
 	 setWindowTitle(tr("DazToUnity Bridge v%1.%2").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR));
 #endif

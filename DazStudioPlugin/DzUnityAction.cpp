@@ -281,10 +281,21 @@ void DzUnityAction::writeConfiguration()
 
 	writeDTUHeader(writer);
 
-	if (m_sAssetType.toLower().contains("mesh"))
+	if (m_sAssetType.toLower().contains("mesh") || m_sAssetType == "Animation")
 	{
 		writeAllMaterials(m_pSelectedNode, writer);
 		writeAllMorphs(writer);
+
+		// DB, 2022-June-17: Daz To Unified Bridge Format support
+		writeMorphLinks(writer);
+		writeMorphNames(writer);
+		DzBoneList aBoneList = getAllBones(m_pSelectedNode);
+		writeSkeletonData(m_pSelectedNode, writer);
+		writeHeadTailData(m_pSelectedNode, writer);
+		writeJointOrientation(aBoneList, writer);
+		writeLimitData(aBoneList, writer);
+		writePoseData(m_pSelectedNode, writer, true);
+
 		writeAllSubdivisions(writer);
 		writeAllDforceInfo(m_pSelectedNode, writer);
 	}
