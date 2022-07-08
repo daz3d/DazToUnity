@@ -86,8 +86,8 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 connect(installUnityFilesCheckBox, SIGNAL(stateChanged(int)), this, SLOT(HandleInstallUnityFilesCheckBoxChange(int)));
 
 	 // Add the widget to the basic dialog
-	 mainLayout->insertRow(0, "Unity Assets Folder", assetsFolderLayout);
-	 mainLayout->insertRow(1, installOrOverwriteUnityFilesLabel, installUnityFilesCheckBox);
+	 mainLayout->insertRow(1, "Unity Assets Folder", assetsFolderLayout);
+	 mainLayout->insertRow(2, installOrOverwriteUnityFilesLabel, installUnityFilesCheckBox);
 
 	 // Make the dialog fit its contents, with a minimum width, and lock it down
 	 resize(QSize(500, 0).expandedTo(minimumSizeHint()));
