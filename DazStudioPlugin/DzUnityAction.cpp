@@ -123,10 +123,18 @@ void DzUnityAction::executeAction()
 	// input from the user.
 	if (dzScene->getNumSelectedNodes() != 1)
 	{
-		if (m_nNonInteractiveMode == 0)
+		DzNodeList rootNodes = buildRootNodeList();
+		if (rootNodes.length() == 1)
 		{
-			QMessageBox::warning(0, tr("Error"),
-				tr("Please select one Character or Prop to send."), QMessageBox::Ok);
+			dzScene->setPrimarySelection(rootNodes[0]);
+		}
+		else if (rootNodes.length() > 1)
+		{
+			if (m_nNonInteractiveMode == 0)
+			{
+				QMessageBox::warning(0, tr("Error"),
+					tr("Please select one Character or Prop to send."), QMessageBox::Ok);
+			}
 		}
 	}
 
@@ -272,7 +280,7 @@ QString DzUnityAction::createUnityFiles(bool replace)
 
 void DzUnityAction::writeConfiguration()
 {
-	QString DTUfilename = m_sDestinationPath + m_sAssetName + ".dtu";
+	QString DTUfilename = m_sDestinationPath + m_sExportFilename + ".dtu";
 	QFile DTUfile(DTUfilename);
 	DTUfile.open(QIODevice::WriteOnly);
 	DzJsonWriter writer(&DTUfile);
