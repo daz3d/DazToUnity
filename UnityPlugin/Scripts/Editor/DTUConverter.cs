@@ -178,9 +178,9 @@ namespace Daz3D
 			var valueLower = dtuMaterial.Value.ToLower();
 
 			if(
-				valueLower.Contains("cornea") || assetNameLower.EndsWith("cornea") || matNameLower.Contains("cornea") 
-				|| valueLower.Contains("eyemoisture") || assetNameLower.EndsWith("eyemoisture") || matNameLower.Contains("eyemoisture") 
-				|| valueLower.Contains("eyereflection") || assetNameLower.EndsWith("eyereflection") || matNameLower.Contains("eyereflection") 
+				valueLower.Contains("cornea") || assetNameLower.EndsWith("cornea") || matNameLower.Contains("cornea")
+				|| valueLower.Contains("eyemoisture") || assetNameLower.EndsWith("eyemoisture") || matNameLower.Contains("eyemoisture")
+				|| valueLower.Contains("eyereflection") || assetNameLower.EndsWith("eyereflection") || matNameLower.Contains("eyereflection")
 				|| valueLower.Contains("tear") || assetNameLower.EndsWith("tear") || matNameLower.Contains("tear")
 				)
 			{
@@ -222,7 +222,7 @@ namespace Daz3D
 			var dualLobeSpecularReflectivity = dtuMaterial.Get("Dual Lobe Specular Reflectivity");
 
 			// DB (2021-05-03): added "Iray Uber" and "PBRSkin" to materialtypes which can potential be classified as skin.
-			if (dtuMaterial.MaterialType == "omUberSurface" || dtuMaterial.MaterialType == "omHumanSurface" || dtuMaterial.MaterialType == "Iray Uber" || dtuMaterial.MaterialType == "PBRSkin" || dtuMaterial.MaterialType == "AoA_Subsurface")
+			if (dtuMaterial.MaterialType == "omUberSurface" || dtuMaterial.MaterialType == "omHumanSurface" || dtuMaterial.MaterialType == "Iray Uber" || dtuMaterial.MaterialType == "PBRSkin")
 			{
 				if (IsDTUMaterialWet(dtuMaterial))
 				{
@@ -747,7 +747,7 @@ namespace Daz3D
 			else
 			{
 				//If we're not hair or skin, let's see which other shader we should fall into
-				// DB 2021-09-25: 
+				// DB 2021-09-25:
 				if(isTranslucent)
 				{
                     // DB 2021-09-25: following message doesn't make sense because there is no support in specular shader either.
@@ -2535,7 +2535,7 @@ namespace Daz3D
 			{
 				materialType = DTUMaterialType.DazStudioDefault;
 			}
-			else if(dtuMaterial.MaterialType == "omUberSurface" || dtuMaterial.MaterialType == "omHumanSurface" || dtuMaterial.MaterialType == "AoA_Subsurface")
+			else if(dtuMaterial.MaterialType == "omUberSurface" || dtuMaterial.MaterialType == "omHumanSurface")
 			{
 				materialType = DTUMaterialType.OmUberSurface;
 			}
@@ -2705,7 +2705,7 @@ namespace Daz3D
 			{
 				UnityEngine.Debug.Log("Copying file: " + path);
 				// BUGFIX: copyRemote is set to false if file exists OR if MD5 is different, which means overwrite must be turned on
-				try 
+				try
 				{
 					System.IO.File.Copy(path, cleanPath, true);
 				}
