@@ -230,10 +230,20 @@ void DzUnityDialog::HandleAssetFolderChanged(const QString& directoryName)
 void DzUnityDialog::HandleSelectAssetsFolderButton()
 {
 	 // DB (2021-05-15): prepopulate with existing folder string
-	 QString directoryName = "/home";
-	 if (!settings->value("AssetsPath").isNull())
+	 QString directoryName = "";
+	 if (directoryName == "" && assetsFolderEdit->text() != "")
+	 {
+		 directoryName = assetsFolderEdit->text();
+		 if (QDir(directoryName).exists() == false) directoryName == "";
+	 }
+	 if (directoryName == "" && !settings->value("AssetsPath").isNull())
 	 {
 		 directoryName = settings->value("AssetsPath").toString();
+		 if (QDir(directoryName).exists() == false) directoryName == "";
+	 }
+	 if (directoryName == "")
+	 {
+		 directoryName = "/home";
 	 }
 	 directoryName = QFileDialog::getExistingDirectory(this, tr("Choose Directory"),
 		  directoryName,
@@ -345,10 +355,16 @@ void DzUnityDialog::HandleTargetPluginInstallerButton()
 	// For first run, display help / explanation popup dialog...
 	// TODO
 
+
+	QString startingFolder = "/home";
+	if (assetsFolderEdit->text() != "") {
+		startingFolder = assetsFolderEdit->text();
+	}
+
 	// Get Destination Folder
 	QString directoryName = QFileDialog::getExistingDirectory(this,
 		tr("Please select a Project Folder to Install the Unity Plugin"),
-		"/home",
+		startingFolder,
 		QFileDialog::ShowDirsOnly
 		| QFileDialog::DontResolveSymlinks);
 
@@ -387,6 +403,9 @@ QMessageBox::Abort);
 			return;
 	}
 
+	// SET ASSET PATH widget for convenience
+	assetsFolderEdit->setText(directoryName + "/Assets");
+	if (settings) settings->setValue("AssetsPath", directoryName + "/Assets");
 	QString sDestinationPath = directoryName + "/Assets/Daz3D/Support";
 
 	// create plugins folder if does not exist
@@ -451,22 +470,39 @@ QMessageBox::Abort);
 	// verify successful plugin extraction/installation
 	if (bInstallSuccessful)
 	{
-		QMessageBox::information(0, "Daz To Unity Bridge",
-			tr("Plugin copied to: ") + activePluginPath +
-			tr(".  Please switch to your Unity Project to complete the import process. \
-If Unity Import dialog does not appear, then please double-click desired UnityPackage \
-file located in the Assets\\Daz3D\\Support\\ folder of your Unity Project."), QMessageBox::Ok);
+		QMessageBox msgBox;
+		msgBox.setTextFormat(Qt::RichText);
+		msgBox.setWindowTitle("Unity Bridge Plugin Installer");
+		msgBox.setText(tr("<h4>Unity Plugin was copied to:</h4>") +
+			"<h4><center>" + activePluginPath + "</center></h4>" +
+			tr("<h4>Please switch to your Unity Project to complete the import process. \
+If Unity Import dialog does not appear, then please double-click the desired UnityPackage \
+file located in the \"Assets\\Daz3D\\Support\\\" folder of your Unity Project.</h4>")
+ );
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.exec();
 
 #ifdef WIN32
 		ShellExecute(0, 0, activePluginPath.toLocal8Bit().data(), 0, 0, SW_SHOW);
 #endif
-
+		installUnityFilesCheckBox->setChecked(false);
 	}
 	else
 	{
-		QMessageBox::warning(0, "Daz To Unity Bridge",
-			tr("Sorry, an unknown error occured. Unable to install \
-Unity Plugin to: ") + sDestinationPath);
+		QMessageBox msgBox;
+		msgBox.setTextFormat(Qt::RichText);
+		msgBox.setIcon(QMessageBox::Critical);
+		msgBox.setWindowTitle("Unity Bridge Plugin Installer");
+		msgBox.setText(tr("<h4>Sorry, an unknown error occured. Unable to install \
+Unity Plugin to:</h4>") +
+			"<h4><center>" + sDestinationPath + "</center></h4>" +
+			tr("<h4>For further help, you can go to the \
+<a href=\"https://www.daz3d.com/forums/categories/unity-discussion\">Daz Forums</a> or the \
+<a href=\"https://github.com/daz3d/DazToUnity/issues\">Github Issues</a> page.")
+);
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.exec();
+
 		return;
 	}
 
