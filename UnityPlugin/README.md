@@ -1,4 +1,4 @@
-Daz To Unity version 2.0
+Daz To Unity version 2022.1.3.7
 =============================================
 
 Description:
@@ -10,15 +10,12 @@ The Daz To Unity Bridge consists of two major parts:
 
 New in this version:
 ====================
-- Many uDTU features now merged with official Daz To Unity bridge, including:
-- Mac support,
-- Animation support,
-- Improved HDRP Shaders,
-- New URP Shader support,
-- Built-In Standard Shader support,
-- Genesis 8.1 and PBRSkin support,
-- Improved Subdivision support,
-- Improved Emission support.
+Version 2022.1.3.7:
+- New version numbering based on Year-Revision-Bugfix
+- Updated and integrated latest updates to Daz Bridge Library
+- Improved Morph and Subdivision Selection dialogs
+- Improved Unity Plugin Installer
+- DTU updates to support future add-ons such as auto-JCM
 
 
 Known Issues:
@@ -33,7 +30,7 @@ Known Issues:
 Setup:
 ======
 No setup is required in Unity Editor.
-The Daz to Unity plugin will write all the neccessary files (scripts, profiles, export data) into each targeted Unity project.
+The Daz to Unity plugin will write all the necessary files (scripts, profiles, export data) into each targeted Unity project.
 The import process is automatic.
 
 
@@ -56,7 +53,7 @@ Files:
 ======
 FBX - Much of the model data (skeletal hierarchy, weighted mesh, material mappings, lights, cameras, etc.) are conveyed in FBX format. These FBX files are constructed by Daz3D's built-in FBX exporter, and maintain the same variety of options and level of fidelity as a routine FBX export.
 DTU - The Bridge plug-in also writes a Daz-to-Unity file (in JSON format) which details the material properties so the importer can construct and assign high-fidelity Unity materials.
-Shaders - A suite of shader graphs are copied into your unity project the first time an export happens. These are imported by Unity Editor and compiled into shaders compatable with Unity's HD Render Pipeline.
+Shaders - A suite of shader graphs are copied into your unity project the first time an export happens. These are imported by Unity Editor and compiled into shaders compatible with Unity's HD Render Pipeline.
 Scripts - A suite of C# scripts are copied into your unity project the first time an export happens. These include a custom importer for DTU file types, a custom EditorWindow and helper classes used by the importer.
 Diffusion Profiles - A generic diffusion profile and an IrayUberSkinDiffusionProfile are copied into your Unity project the first time an export happens. These are used by the custom shaders to replicate skin surface properties found in Daz3D Studio.
 

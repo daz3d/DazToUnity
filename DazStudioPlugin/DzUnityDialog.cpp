@@ -26,10 +26,16 @@
 #include "qstandarditemmodel.h"
 
 #include "DzUnityDialog.h"
+#include "DzBridgeAction.h"
 #include "DzBridgeMorphSelectionDialog.h"
 #include "DzBridgeSubdivisionDialog.h"
 
 #include "version.h"
+
+#ifdef WIN32
+#include <Windows.h>
+#include <shellapi.h>
+#endif
 
 /*****************************
 Local definitions
@@ -55,13 +61,31 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 int btnMinWidth = style()->pixelMetric(DZ_PM_ButtonMinWidth);
 
 	 // Set the dialog title
-	 int revision = PLUGIN_REV % 1000;
-#ifdef _DEBUG
-	 setWindowTitle(tr("DazToUnity Bridge v%1.%2 Pre-Release Build %3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(revision).arg(PLUGIN_BUILD));
+#ifdef _PRE_RELEASE
+	 setWindowTitle(tr("DazToUnity Bridge v%1.%2 Pre-Release Build %3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD));
 #else
 	 setWindowTitle(tr("DazToUnity Bridge v%1.%2").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR));
 #endif
 
+	 // Welcome String for Setup/Welcome Mode
+	 QString sSetupModeString = tr("<h4>\
+If this is your first time using the Daz To Unity Bridge, please be sure to read or watch \
+the tutorials or videos below to install and enable the Unity Plugin for the bridge:</h4>\
+<ul>\
+<li><a href=\"https://github.com/daz3d/DazToUnity/releases\">Download latest Build dependencies, updates and bugfixes (Github)</a></li>\
+<li><a href=\"https://github.com/daz3d/DazToUnity#2-how-to-install\">How To Install and Configure the Bridge (Github)</a></li>\
+<li><a href=\"https://www.daz3d.com/unity-bridge#faq\">Daz To Unity FAQ (Daz 3D)</a></li>\
+<li><a href=\"https://www.daz3d.com/forums/discussion/573571/daztounity-2022-bridge-what-s-new-and-how-to-use-it\">What's New and How To Use It (Daz 3D Forums)</a></li>\
+</ul>\
+Once the Unity plugin is enabled, please add a Character or Prop to the Scene to transfer assets using the Daz To Unity Bridge.<br><br>\
+To find out more about Daz Bridges, go to <a href=\"https://www.daz3d.com/daz-bridges\">https://www.daz3d.com/daz-bridges</a><br>\
+");
+	 m_WelcomeLabel->setText(sSetupModeString);
+	 QString sBridgeVersionString = tr("Daz To Unity Bridge %1.%2 revision %3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD);
+	 setBridgeVersionStringAndLabel(sBridgeVersionString);
+
+
+	 // Disable unsupported AssetType ComboBox Options
 	 QStandardItemModel* model = qobject_cast<QStandardItemModel*>(assetTypeCombo->model());
 	 QStandardItem* item = nullptr;
 	 item = model->findItems("Environment").first();
@@ -87,8 +111,23 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 connect(installUnityFilesCheckBox, SIGNAL(stateChanged(int)), this, SLOT(HandleInstallUnityFilesCheckBoxChange(int)));
 
 	 // Add the widget to the basic dialog
-	 mainLayout->insertRow(0, "Unity Assets Folder", assetsFolderLayout);
-	 mainLayout->insertRow(1, installOrOverwriteUnityFilesLabel, installUnityFilesCheckBox);
+	 mainLayout->insertRow(1, "Unity Assets Folder", assetsFolderLayout);
+	 mainLayout->insertRow(2, installOrOverwriteUnityFilesLabel, installUnityFilesCheckBox);
+
+	 // Rename Open Intermediate Folder button
+	 m_OpenIntermediateFolderButton->setText(tr("Open Unity Project Folder"));
+
+	 // Configure Target Plugin Installer
+	 renameTargetPluginInstaller("Unity Plugin Installer");
+	 m_TargetSoftwareVersionCombo->clear();
+	 m_TargetSoftwareVersionCombo->addItem("Select Unity Version + Rendering Pipeline");
+	 m_TargetSoftwareVersionCombo->addItem("2020+ HDRP (High-Definition Rendering Pipeline)");
+	 m_TargetSoftwareVersionCombo->addItem("2020+ URP (Universal Rendering Pipeline)");
+	 m_TargetSoftwareVersionCombo->addItem("2020+ Built-In (Standard Shader)");
+	 m_TargetSoftwareVersionCombo->addItem("2019 HDRP (High-Definition Rendering Pipeline)");
+	 m_TargetSoftwareVersionCombo->addItem("2019 URP (Universal Rendering Pipeline)");
+	 m_TargetSoftwareVersionCombo->addItem("2019 Built-In (Standard Shader)");
+	 showTargetPluginInstaller(true);
 
 	 // Make the dialog fit its contents, with a minimum width, and lock it down
 	 resize(QSize(500, 0).expandedTo(minimumSizeHint()));
@@ -102,6 +141,7 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 assetTypeCombo->setWhatsThis("Skeletal Mesh for something with moving parts, like a character\nStatic Mesh for things like props\nAnimation for a character animation.");
 	 assetsFolderEdit->setWhatsThis("Unity Assets folder. DazStudio assets will be exported into a subfolder inside this folder.");
 	 assetsFolderButton->setWhatsThis("Unity Assets folder. DazStudio assets will be exported into a subfolder inside this folder.");
+	 m_wTargetPluginInstaller->setWhatsThis("You can install the Unity Plugin by selecting the desired Render Pipeline and then selecting a Unity Project folder.");
 
 	 // Set Defaults
 	 resetToDefaults();
@@ -109,6 +149,10 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 // Load Settings
 	 loadSavedSettings();
 
+	 if (m_bSetupMode)
+	 {
+		 setDisabled(true);
+	 }
 }
 
 bool DzUnityDialog::loadSavedSettings()
@@ -132,6 +176,8 @@ bool DzUnityDialog::loadSavedSettings()
 
 void DzUnityDialog::resetToDefaults()
 {
+	m_bDontSaveSettings = true;
+
 	DzBridgeDialog::resetToDefaults();
 
 	QString DefaultPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + QDir::separator() + "DazToUnity";
@@ -157,6 +203,7 @@ void DzUnityDialog::resetToDefaults()
 		assetTypeCombo->setCurrentIndex(1);
 	}
 
+	m_bDontSaveSettings = false;
 }
 
 void DzUnityDialog::HandleAssetFolderChanged(const QString& directoryName)
@@ -183,10 +230,20 @@ void DzUnityDialog::HandleAssetFolderChanged(const QString& directoryName)
 void DzUnityDialog::HandleSelectAssetsFolderButton()
 {
 	 // DB (2021-05-15): prepopulate with existing folder string
-	 QString directoryName = "/home";
-	 if (!settings->value("AssetsPath").isNull())
+	 QString directoryName = "";
+	 if (directoryName == "" && assetsFolderEdit->text() != "")
+	 {
+		 directoryName = assetsFolderEdit->text();
+		 if (QDir(directoryName).exists() == false) directoryName == "";
+	 }
+	 if (directoryName == "" && !settings->value("AssetsPath").isNull())
 	 {
 		 directoryName = settings->value("AssetsPath").toString();
+		 if (QDir(directoryName).exists() == false) directoryName == "";
+	 }
+	 if (directoryName == "")
+	 {
+		 directoryName = "/home";
 	 }
 	 directoryName = QFileDialog::getExistingDirectory(this, tr("Choose Directory"),
 		  directoryName,
@@ -195,37 +252,33 @@ void DzUnityDialog::HandleSelectAssetsFolderButton()
 
 	 if (directoryName != NULL)
 	 {
+		  // sanity check to avoid crashes
+		  if (QDir(directoryName).exists() == false)
+		  {
+			  QMessageBox::warning(0, tr("Error"), tr("Please select Unity Root Assets Folder."), QMessageBox::Ok);
+			  return;
+		  }
+		  if (QRegExp(".*/assets$").exactMatch(directoryName.toLower()) == false)
+		  {
+			  if (IsValidProjectFolder(directoryName))
+			  {
+				  directoryName += "/Assets";
+			  }			  
+		  }
+
 		  QDir parentDir = QFileInfo(directoryName).dir();
-		  if (!parentDir.exists())
+		  if (IsValidProjectFolder(parentDir.absolutePath()) == false)
 		  {
-				QMessageBox::warning(0, tr("Error"), tr("Please select Unity Root Assets Folder."), QMessageBox::Ok);
-				return;
+			  QMessageBox::warning(0, tr("Error"), tr("Please select Unity Root Assets Folder."), QMessageBox::Ok);
+			  return;
 		  }
-		  else
-		  {
-				bool found1 = false;
-				bool found2 = false;
-				QFileInfoList list = parentDir.entryInfoList(QDir::NoDot | QDir::NoDotDot | QDir::Dirs);
-				for (int i = 0; i < list.size(); i++)
-				{
-					 QFileInfo file = list[i];
-					 if (file.baseName() == QString("ProjectSettings"))
-						  found1 = true;
-					 if (file.baseName() == QString("Library"))
-						  found2 = true;
-				}
 
-				if (!found1 || !found2)
-				{
-					 QMessageBox::warning(0, tr("Error"), tr("Please select Unity Root Assets Folder."), QMessageBox::Ok);
-					 return;
-				}
+		  assetsFolderEdit->setText(directoryName);
+		  settings->setValue("AssetsPath", directoryName);
 
-				assetsFolderEdit->setText(directoryName);
-				settings->setValue("AssetsPath", directoryName);
-		  }
 	 }
-    
+	 // user cancelled, return with no further popups
+	 return;
 }
 
 void DzUnityDialog::HandleInstallUnityFilesCheckBoxChange(int state)
@@ -282,6 +335,225 @@ void DzUnityDialog::HandleAssetTypeComboChange(int state)
 		}
 		assetNameEdit->setText(assetNameString);
 	}
+
+}
+
+void DzUnityDialog::HandleTargetPluginInstallerButton()
+{
+	if (m_wTargetPluginInstaller == nullptr) return;
+
+	// Validate software version and set resource zip files to extract
+	QString softwareVersion = m_TargetSoftwareVersionCombo->currentText();
+	if (softwareVersion == "" || softwareVersion.toLower().contains("select"))
+	{
+		// Warning, not a valid plugins folder path
+		QMessageBox::information(0, "Daz Bridge",
+			tr("Please select a Rendering Pipeline."));
+		return;
+	}
+
+	// For first run, display help / explanation popup dialog...
+	// TODO
+
+
+	QString startingFolder = "/home";
+	if (assetsFolderEdit->text() != "") {
+		startingFolder = assetsFolderEdit->text();
+	}
+
+	// Get Destination Folder
+	QString directoryName = QFileDialog::getExistingDirectory(this,
+		tr("Please select a Project Folder to Install the Unity Plugin"),
+		startingFolder,
+		QFileDialog::ShowDirsOnly
+		| QFileDialog::DontResolveSymlinks);
+
+	if (directoryName == NULL)
+	{
+		// User hit cancel: return without addition popups
+		return;
+	}
+
+	// fix path separators
+	directoryName.replace("\\", "/");
+
+	// Validate selected Folder is valid for plugin
+	bool bIsValidProjectFolder = false;
+
+	if (QRegExp(".*/assets/daz3d$").exactMatch(directoryName.toLower()) == true)
+	{
+		directoryName.replace("/assets/daz3d", "", Qt::CaseInsensitive);
+	}
+	else if (QRegExp(".*/assets$").exactMatch(directoryName.toLower()) == true)
+	{
+		directoryName.replace("/assets","", Qt::CaseInsensitive);
+	}
+	bIsValidProjectFolder = IsValidProjectFolder(directoryName);
+
+	if (bIsValidProjectFolder == false)
+	{
+		// Warning, not a valid plugins folder path
+		auto userChoice = QMessageBox::warning(0, "Daz To Unity Bridge",
+			tr("The selected folder is not a valid Unity Project folder.  Please select a \
+valid Unity Project folder.\n\nYou can choose to Abort and select a new folder, \
+or Ignore this error and install the plugin anyway."),
+QMessageBox::Ignore | QMessageBox::Abort,
+QMessageBox::Abort);
+		if (userChoice == QMessageBox::StandardButton::Abort)
+			return;
+	}
+
+	// SET ASSET PATH widget for convenience
+	assetsFolderEdit->setText(directoryName + "/Assets");
+	if (settings) settings->setValue("AssetsPath", directoryName + "/Assets");
+	QString sDestinationPath = directoryName + "/Assets/Daz3D/Support";
+
+	// create plugins folder if does not exist
+	if (QDir(sDestinationPath).exists() == false)
+	{
+		QDir().mkpath(sDestinationPath);
+	}
+
+	bool bInstallSuccessful = true;
+	bool bReplace = true;
+
+	QString srcPathHDRP;
+	QString srcPathURP;
+	QString srcPathStandard;
+
+	if (softwareVersion.contains("2019"))
+	{
+		srcPathHDRP = ":/DazBridgeUnity/2019-hdrp.unitypackage";
+		srcPathURP = ":/DazBridgeUnity/2019-urp.unitypackage";
+		srcPathStandard = ":/DazBridgeUnity/2019-builtin.unitypackage";
+	}
+	else
+	{
+		srcPathHDRP = ":/DazBridgeUnity/2020-hdrp.unitypackage";
+		srcPathURP = ":/DazBridgeUnity/2020-urp.unitypackage";
+		srcPathStandard = ":/DazBridgeUnity/2020-builtin.unitypackage";
+	}
+
+	QFile srcFileHDRP(srcPathHDRP);
+	QString destPathHDRP = sDestinationPath + "/DazToUnity HDRP.unitypackage";
+	if (DZ_BRIDGE_NAMESPACE::DzBridgeAction::copyFile(&srcFileHDRP, &destPathHDRP, bReplace) == false)
+		bInstallSuccessful = false;
+	srcFileHDRP.close();
+
+	QFile srcFileURP(srcPathURP);
+	QString destPathURP = sDestinationPath + "/DazToUnity URP.unitypackage";
+	if (DZ_BRIDGE_NAMESPACE::DzBridgeAction::copyFile(&srcFileURP, &destPathURP, bReplace) == false)
+		bInstallSuccessful = false;
+	srcFileURP.close();
+
+	QFile srcFileStandard(srcPathStandard);
+	QString destPathStandard = sDestinationPath + "/DazToUnity Standard Shader.unitypackage";
+	if (DZ_BRIDGE_NAMESPACE::DzBridgeAction::copyFile(&srcFileStandard, &destPathStandard, bReplace) == false)
+		bInstallSuccessful = false;
+	srcFileStandard.close();
+
+
+	QString activePluginPath = "";
+	if (softwareVersion.contains("HDRP", Qt::CaseInsensitive))
+	{
+		activePluginPath = destPathHDRP;
+	}
+	if (softwareVersion.contains("URP", Qt::CaseInsensitive))
+	{
+		activePluginPath = destPathURP;
+	}
+	if (softwareVersion.contains("Built-In", Qt::CaseInsensitive))
+	{
+		activePluginPath = destPathStandard;
+	}
+
+	// verify successful plugin extraction/installation
+	if (bInstallSuccessful)
+	{
+		QMessageBox msgBox;
+		msgBox.setTextFormat(Qt::RichText);
+		msgBox.setWindowTitle("Unity Bridge Plugin Installer");
+		msgBox.setText(tr("<h4>Unity Plugin was copied to:</h4>") +
+			"<h4><center>" + activePluginPath + "</center></h4>" +
+			tr("<h4>Please switch to your Unity Project to complete the import process. \
+If Unity Import dialog does not appear, then please double-click the desired UnityPackage \
+file located in the \"Assets\\Daz3D\\Support\\\" folder of your Unity Project.</h4>")
+ );
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.exec();
+
+#ifdef WIN32
+		ShellExecute(0, 0, activePluginPath.toLocal8Bit().data(), 0, 0, SW_SHOW);
+#endif
+		installUnityFilesCheckBox->setChecked(false);
+	}
+	else
+	{
+		QMessageBox msgBox;
+		msgBox.setTextFormat(Qt::RichText);
+		msgBox.setIcon(QMessageBox::Critical);
+		msgBox.setWindowTitle("Unity Bridge Plugin Installer");
+		msgBox.setText(tr("<h4>Sorry, an unknown error occured. Unable to install \
+Unity Plugin to:</h4>") +
+			"<h4><center>" + sDestinationPath + "</center></h4>" +
+			tr("<h4>For further help, you can go to the \
+<a href=\"https://www.daz3d.com/forums/categories/unity-discussion\">Daz Forums</a> or the \
+<a href=\"https://github.com/daz3d/DazToUnity/issues\">Github Issues</a> page.")
+);
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.exec();
+
+		return;
+	}
+
+	return;
+}
+
+void DzUnityDialog::HandleOpenIntermediateFolderButton(QString sFolderPath)
+{
+	// Open Selected Unity Project Folder
+	QString assetFolder = assetsFolderEdit->text().replace("\\", "/") + "/Daz3D";
+	DzBridgeDialog::HandleOpenIntermediateFolderButton(assetFolder);
+}
+
+// Return TRUE if Project Folder Path is Valid
+bool DzUnityDialog::IsValidProjectFolder(QString sProjectFolderPath)
+{
+	if (QDir(sProjectFolderPath).exists() == false)
+		return false;
+
+	bool found1 = false;
+	bool found2 = false;
+	bool found3 = false;
+
+	if (QDir(sProjectFolderPath + "/Assets").exists() == true)
+	{
+		found1 = true;
+	}
+	if (QDir(sProjectFolderPath + "/ProjectSettings").exists() == true)
+	{
+		found2 = true;
+	}
+	if (QDir(sProjectFolderPath + "/Library").exists() == true)
+	{
+		found3 = true;
+	}
+
+	if (found1 && found2 && found3)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void DzUnityDialog::setDisabled(bool bDisabled)
+{
+	DzBridgeDialog::setDisabled(bDisabled);
+
+	assetsFolderButton->setDisabled(bDisabled);
+	assetsFolderEdit->setDisabled(bDisabled);
+	installUnityFilesCheckBox->setDisabled(bDisabled);
 
 }
 

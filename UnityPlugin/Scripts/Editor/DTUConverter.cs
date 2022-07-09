@@ -178,9 +178,9 @@ namespace Daz3D
 			var valueLower = dtuMaterial.Value.ToLower();
 
 			if(
-				valueLower.Contains("cornea") || assetNameLower.EndsWith("cornea") || matNameLower.Contains("cornea") 
-				|| valueLower.Contains("eyemoisture") || assetNameLower.EndsWith("eyemoisture") || matNameLower.Contains("eyemoisture") 
-				|| valueLower.Contains("eyereflection") || assetNameLower.EndsWith("eyereflection") || matNameLower.Contains("eyereflection") 
+				valueLower.Contains("cornea") || assetNameLower.EndsWith("cornea") || matNameLower.Contains("cornea")
+				|| valueLower.Contains("eyemoisture") || assetNameLower.EndsWith("eyemoisture") || matNameLower.Contains("eyemoisture")
+				|| valueLower.Contains("eyereflection") || assetNameLower.EndsWith("eyereflection") || matNameLower.Contains("eyereflection")
 				|| valueLower.Contains("tear") || assetNameLower.EndsWith("tear") || matNameLower.Contains("tear")
 				)
 			{
@@ -747,7 +747,7 @@ namespace Daz3D
 			else
 			{
 				//If we're not hair or skin, let's see which other shader we should fall into
-				// DB 2021-09-25: 
+				// DB 2021-09-25:
 				if(isTranslucent)
 				{
                     // DB 2021-09-25: following message doesn't make sense because there is no support in specular shader either.
@@ -1487,10 +1487,15 @@ namespace Daz3D
 			}
 			else
 			{
-
-
+				// DB 2022-July-8: Standard shader suppport
+#if USING_STANDARD_SHADER
+				mat.SetColor("_Color", diffuseColor.Color);
+				var tex = ImportTextureFromPath(diffuseColor.Texture, textureDir, record);
+				mat.SetTexture("_MainTex", tex);
+#else
 				mat.SetColor("_Diffuse",diffuseColor.Color);
 				mat.SetTexture("_DiffuseMap",ImportTextureFromPath(diffuseColor.Texture, textureDir, record));
+#endif
 
 				//glossiness seems to have no real effect, so we'll just set everything to being rough
 				mat.SetFloat("_Roughness",1.0f);
@@ -1552,12 +1557,22 @@ namespace Daz3D
 
 
 			//Fallback handling
-			if(cutoutOpacity.Exists && cutoutOpacity.TextureExists())
+#if USING_STANDARD_SHADER
+			mat.renderQueue = 2450;
+			mat.EnableKeyword("_ALPHATEST_ON");
+			mat.SetFloat("_Mode", 1.0f); // Set Cutout rendering mode
+			mat.SetFloat("_Cutoff", 0.35f);
+			if (cutoutOpacity.Exists && cutoutOpacity.TextureExists())
+            {
+				mat.SetTexture("_MainTex", ImportTextureFromPath(cutoutOpacity.Texture, textureDir, record, false, true, true));
+			}
+#else
+			if (cutoutOpacity.Exists && cutoutOpacity.TextureExists())
 			{
 				mat.SetFloat("_Alpha",cutoutOpacity.Float);
 				mat.SetTexture("_AlphaMap",ImportTextureFromPath(cutoutOpacity.Texture, textureDir, record, false, true));
 			}
-
+#endif
 
 			//TODO: DiffuseStrength, SpecularStrength, AmbientStrength, Neg/Pos Bump, Disp, Reflection, Refraction
 
@@ -1637,8 +1652,15 @@ namespace Daz3D
 				mat.SetVector("_Offset",offset);
 			}
 
+			// DB 2022-July-8: Standard shader suppport
+#if USING_STANDARD_SHADER
+			mat.SetColor("_Color", diffuseColor.Color);
+			var tex = ImportTextureFromPath(diffuseColor.Texture, textureDir, record);
+			mat.SetTexture("_MainTex", tex);
+#else
 			mat.SetColor("_Diffuse",diffuseColor.Color);
 			mat.SetTexture("_DiffuseMap",ImportTextureFromPath(diffuseColor.Texture, textureDir, record));
+#endif
 
 			mat.SetTexture("_NormalMap",ImportTextureFromPath(normalMap.Texture, textureDir, record, true));
 			mat.SetFloat("_NormalStrength",normalMap.Float);
@@ -1952,8 +1974,15 @@ namespace Daz3D
 			}
 			else
 			{
+				// DB 2022-July-8: Standard shader support
+#if USING_STANDARD_SHADER
+				mat.SetColor("_Color", diffuseColor.Color);
+				var tex = ImportTextureFromPath(diffuseColor.Texture, textureDir, record);
+				mat.SetTexture("_MainTex", tex);
+#else
 				mat.SetColor("_Diffuse",diffuseColor.Color);
 				mat.SetTexture("_DiffuseMap",ImportTextureFromPath(diffuseColor.Texture, textureDir, record));
+#endif
 
 				if(opacityActive.Float > 0f)
 				{
@@ -2084,8 +2113,15 @@ namespace Daz3D
 			// 2022-Feb-13 (DB): hardcode from isTransparent=true back to isTransparent=false to fix zsorting problems with hair vs cap, etc
 			bool isTransparent = false;
 
+			// DB 2022-July-8: standard shader support
+#if USING_STANDARD_SHADER
+			mat.SetColor("_Color", diffuseColor.Color);
+			var tex = ImportTextureFromPath(diffuseColor.Texture, textureDir, record);
+			mat.SetTexture("_MainTex", tex);
+#else
 			mat.SetColor("_Diffuse",diffuseColor.Color);
 			mat.SetTexture("_DiffuseMap",ImportTextureFromPath(diffuseColor.Texture, textureDir, record));
+#endif
 
 			if(Mathf.Approximately((float)bumpMode.Value.AsDouble,0))
 			{
@@ -2221,8 +2257,15 @@ namespace Daz3D
 			// 2022-Feb-13 (DB): hardcode from isTransparent=true back to isTransparent=false to fix zsorting problems with hair vs cap, etc
 			bool isTransparent = false;
 
+			// DB 2022-July-8: standard shader support
+#if USING_STANDARD_SHADER
+			mat.SetColor("_Color", diffuseColor.Color);
+			var tex = ImportTextureFromPath(diffuseColor.Texture, textureDir, record);
+			mat.SetTexture("_MainTex", tex);
+#else
 			mat.SetColor("_Diffuse", diffuseColor.Color);
 			mat.SetTexture("_DiffuseMap", ImportTextureFromPath(diffuseColor.Texture, textureDir, record));
+#endif
 
 			if (Mathf.Approximately((float)bumpMode.Value.AsDouble, 0))
 			{
@@ -2365,12 +2408,16 @@ namespace Daz3D
 			// 2022-Feb-04 (DB): hardcode isTransparent=false to fix transparency z-sort problems
 			bool isTransparent = false;
 
-
-
-
-
+			// DB 2022-July-8: standard shader support
+#if USING_STANDARD_SHADER
+			mat.SetColor("_Color", diffuseColor.Color);
+			var tex = ImportTextureFromPath(diffuseColor.Texture, textureDir, record);
+			mat.SetTexture("_MainTex", tex);
+#else
 			mat.SetColor("_Diffuse",diffuseColor.Color);
 			mat.SetTexture("_DiffuseMap",ImportTextureFromPath(diffuseColor.Texture, textureDir, record));
+#endif
+
 			mat.SetTexture("_NormalMap",ImportTextureFromPath(normalMap.Texture, textureDir, record, true));
 			mat.SetFloat("_NormalStrength",normalMap.Float);
 			mat.SetFloat("_Height",bumpStrength.Float);
@@ -2658,7 +2705,7 @@ namespace Daz3D
 			{
 				UnityEngine.Debug.Log("Copying file: " + path);
 				// BUGFIX: copyRemote is set to false if file exists OR if MD5 is different, which means overwrite must be turned on
-				try 
+				try
 				{
 					System.IO.File.Copy(path, cleanPath, true);
 				}

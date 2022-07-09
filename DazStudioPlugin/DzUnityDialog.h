@@ -38,6 +38,8 @@ protected slots:
 	void HandleInstallUnityFilesCheckBoxChange(int state);
 	void HandleAssetTypeComboChange(int state);
 	void HandleAssetFolderChanged(const QString& directoryName);
+	void HandleTargetPluginInstallerButton();
+	virtual void HandleOpenIntermediateFolderButton(QString sFolderPath = "") override;
 
 protected:
 	QLineEdit* projectEdit;
@@ -47,6 +49,9 @@ protected:
 
 	QLabel* installOrOverwriteUnityFilesLabel;
 	QCheckBox* installUnityFilesCheckBox;
+
+	bool IsValidProjectFolder(QString sProjectFolderPath);
+	virtual void setDisabled(bool) override;
 
 #ifdef UNITTEST_DZBRIDGE
 	friend class UnitTest_DzUnityDialog;

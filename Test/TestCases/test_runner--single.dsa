@@ -65,9 +65,11 @@ function main()
 	aTCResults[i] = logToJson("TC16", Run_TestCase_16("people/genesis 2 male/genesis 2 base male.duf"));
 */
 
-	aTCResults[0] = Run_TestCase_01("/people/genesis 8 female/genesis 8 basic female.duf");
+//	aTCResults[0] = Run_TestCase_01("/people/genesis 8 female/genesis 8 basic female.duf");
 //	aTCResults[6] = Run_TestCase_07("/people/genesis 8 female/genesis 8.1 basic female.duf");
-//	aTCResults[9] = Run_TestCase_10("/people/genesis 8 female/characters/victoria 8.1.duf");
+	aTCResults[9] = Run_TestCase_10("/people/genesis 8 female/characters/victoria 8.1.duf");
+	aTCResults[15] = Run_TestCase_16("people/genesis 2 male/genesis 2 base male.duf");
+
 
 	printToLog("\n");
 	printToLog("=======================");

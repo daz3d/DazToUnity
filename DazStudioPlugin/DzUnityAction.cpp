@@ -123,12 +123,19 @@ void DzUnityAction::executeAction()
 	// input from the user.
 	if (dzScene->getNumSelectedNodes() != 1)
 	{
-		if (m_nNonInteractiveMode == 0)
+		DzNodeList rootNodes = buildRootNodeList();
+		if (rootNodes.length() == 1)
 		{
-			QMessageBox::warning(0, tr("Error"),
-				tr("Please select one Character or Prop to send."), QMessageBox::Ok);
+			dzScene->setPrimarySelection(rootNodes[0]);
 		}
-		return;
+		else if (rootNodes.length() > 1)
+		{
+			if (m_nNonInteractiveMode == 0)
+			{
+				QMessageBox::warning(0, tr("Error"),
+					tr("Please select one Character or Prop to send."), QMessageBox::Ok);
+			}
+		}
 	}
 
 	// Create the dialog
@@ -249,19 +256,19 @@ QString DzUnityAction::createUnityFiles(bool replace)
 	QDir dir;
 	dir.mkpath(destinationFolder);
 
-	QString srcPathHDRP = ":/DazBridgeUnity/daztounity-hdrp.unitypackage";
+	QString srcPathHDRP = ":/DazBridgeUnity/2019-hdrp.unitypackage";
 	QFile srcFileHDRP(srcPathHDRP);
 	QString destPathHDRP = destinationFolder + "/DazToUnity HDRP.unitypackage";
 	this->copyFile(&srcFileHDRP, &destPathHDRP, replace);
 	srcFileHDRP.close();
 
-	QString srcPathURP = ":/DazBridgeUnity/daztounity-urp.unitypackage";
+	QString srcPathURP = ":/DazBridgeUnity/2019-urp.unitypackage";
 	QFile srcFileURP(srcPathURP);
 	QString destPathURP = destinationFolder + "/DazToUnity URP.unitypackage";
 	this->copyFile(&srcFileURP, &destPathURP, replace);
 	srcFileURP.close();
 
-	QString srcPathStandard = ":/DazBridgeUnity/daztounity-standard-shader.unitypackage";
+	QString srcPathStandard = ":/DazBridgeUnity/2019-builtin.unitypackage";
 	QFile srcFileStandard(srcPathStandard);
 	QString destPathStandard = destinationFolder + "/DazToUnity Standard Shader.unitypackage";
 	this->copyFile(&srcFileStandard, &destPathStandard, replace);
@@ -273,7 +280,7 @@ QString DzUnityAction::createUnityFiles(bool replace)
 
 void DzUnityAction::writeConfiguration()
 {
-	QString DTUfilename = m_sDestinationPath + m_sAssetName + ".dtu";
+	QString DTUfilename = m_sDestinationPath + m_sExportFilename + ".dtu";
 	QFile DTUfile(DTUfilename);
 	DTUfile.open(QIODevice::WriteOnly);
 	DzJsonWriter writer(&DTUfile);
@@ -281,10 +288,21 @@ void DzUnityAction::writeConfiguration()
 
 	writeDTUHeader(writer);
 
-	if (m_sAssetType.toLower().contains("mesh"))
+	if (m_sAssetType.toLower().contains("mesh") || m_sAssetType == "Animation")
 	{
 		writeAllMaterials(m_pSelectedNode, writer);
 		writeAllMorphs(writer);
+
+		// DB, 2022-June-17: Daz To Unified Bridge Format support
+		writeMorphLinks(writer);
+		writeMorphNames(writer);
+		DzBoneList aBoneList = getAllBones(m_pSelectedNode);
+		writeSkeletonData(m_pSelectedNode, writer);
+		writeHeadTailData(m_pSelectedNode, writer);
+		writeJointOrientation(aBoneList, writer);
+		writeLimitData(aBoneList, writer);
+		writePoseData(m_pSelectedNode, writer, true);
+
 		writeAllSubdivisions(writer);
 		writeAllDforceInfo(m_pSelectedNode, writer);
 	}
