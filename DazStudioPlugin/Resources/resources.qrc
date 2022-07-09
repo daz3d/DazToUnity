@@ -1,9 +1,12 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
     <qresource prefix="/DazBridgeUnity">
-        <file alias="daztounity-hdrp.unitypackage">DazToUnity-HDRP.unitypackage</file>
-        <file alias="daztounity-urp.unitypackage">DazToUnity-URP.unitypackage</file>
-        <file alias="daztounity-standard-shader.unitypackage">DazToUnity-Standard-Shader.unitypackage</file>
+        <file alias="2019-hdrp.unitypackage">DazToUnity_2019_HDRP.unitypackage</file>
+        <file alias="2019-urp.unitypackage">DazToUnity_2019_URP.unitypackage</file>
+        <file alias="2019-builtin.unitypackage">DazToUnity_2019_Builtin.unitypackage</file>
+        <file alias="2020-hdrp.unitypackage">DazToUnity_2020_HDRP.unitypackage</file>
+        <file alias="2020-urp.unitypackage">DazToUnity_2020_URP.unitypackage</file>
+        <file alias="2020-builtin.unitypackage">DazToUnity_2020_Builtin.unitypackage</file>
     </qresource>
     <qresource prefix="/DazBridgeUnity/Images">
         <file alias="icon">Images/Icon.png</file>

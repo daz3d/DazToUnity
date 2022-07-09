@@ -256,19 +256,19 @@ QString DzUnityAction::createUnityFiles(bool replace)
 	QDir dir;
 	dir.mkpath(destinationFolder);
 
-	QString srcPathHDRP = ":/DazBridgeUnity/daztounity-hdrp.unitypackage";
+	QString srcPathHDRP = ":/DazBridgeUnity/2019-hdrp.unitypackage";
 	QFile srcFileHDRP(srcPathHDRP);
 	QString destPathHDRP = destinationFolder + "/DazToUnity HDRP.unitypackage";
 	this->copyFile(&srcFileHDRP, &destPathHDRP, replace);
 	srcFileHDRP.close();
 
-	QString srcPathURP = ":/DazBridgeUnity/daztounity-urp.unitypackage";
+	QString srcPathURP = ":/DazBridgeUnity/2019-urp.unitypackage";
 	QFile srcFileURP(srcPathURP);
 	QString destPathURP = destinationFolder + "/DazToUnity URP.unitypackage";
 	this->copyFile(&srcFileURP, &destPathURP, replace);
 	srcFileURP.close();
 
-	QString srcPathStandard = ":/DazBridgeUnity/daztounity-standard-shader.unitypackage";
+	QString srcPathStandard = ":/DazBridgeUnity/2019-builtin.unitypackage";
 	QFile srcFileStandard(srcPathStandard);
 	QString destPathStandard = destinationFolder + "/DazToUnity Standard Shader.unitypackage";
 	this->copyFile(&srcFileStandard, &destPathStandard, replace);

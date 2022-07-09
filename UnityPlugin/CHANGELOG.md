@@ -1,5 +1,12 @@
 Daz To Unity Change Log:
 =================================
+Version 2022.1.3.7:
+- New version numbering based on Year-Revision-Bugfix
+- Updated and integrated latest updates to Daz Bridge Library
+- Improved Morph and Subdivision Selection dialogs
+- Improved Unity Plugin Installer
+- DTU updates to support future add-ons such as auto-JCM
+
 Version 2.0:
 - Many uDTU features now merged with official Daz To Unity bridge, including:
 - Mac support,

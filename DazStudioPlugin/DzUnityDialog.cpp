@@ -120,10 +120,13 @@ To find out more about Daz Bridges, go to <a href=\"https://www.daz3d.com/daz-br
 	 // Configure Target Plugin Installer
 	 renameTargetPluginInstaller("Unity Plugin Installer");
 	 m_TargetSoftwareVersionCombo->clear();
-	 m_TargetSoftwareVersionCombo->addItem("Select Unity Rendering Pipeline");
-	 m_TargetSoftwareVersionCombo->addItem("HDRP (High-Definition Rendering Pipeline)");
-	 m_TargetSoftwareVersionCombo->addItem("URP (Universal Rendering Pipeline)");
-	 m_TargetSoftwareVersionCombo->addItem("Built-In (Standard Shader)");
+	 m_TargetSoftwareVersionCombo->addItem("Select Unity Version + Rendering Pipeline");
+	 m_TargetSoftwareVersionCombo->addItem("2020+ HDRP (High-Definition Rendering Pipeline)");
+	 m_TargetSoftwareVersionCombo->addItem("2020+ URP (Universal Rendering Pipeline)");
+	 m_TargetSoftwareVersionCombo->addItem("2020+ Built-In (Standard Shader)");
+	 m_TargetSoftwareVersionCombo->addItem("2019 HDRP (High-Definition Rendering Pipeline)");
+	 m_TargetSoftwareVersionCombo->addItem("2019 URP (Universal Rendering Pipeline)");
+	 m_TargetSoftwareVersionCombo->addItem("2019 Built-In (Standard Shader)");
 	 showTargetPluginInstaller(true);
 
 	 // Make the dialog fit its contents, with a minimum width, and lock it down
@@ -395,26 +398,41 @@ QMessageBox::Abort);
 	bool bInstallSuccessful = true;
 	bool bReplace = true;
 
-	QString srcPathHDRP = ":/DazBridgeUnity/daztounity-hdrp.unitypackage";
+	QString srcPathHDRP;
+	QString srcPathURP;
+	QString srcPathStandard;
+
+	if (softwareVersion.contains("2019"))
+	{
+		srcPathHDRP = ":/DazBridgeUnity/2019-hdrp.unitypackage";
+		srcPathURP = ":/DazBridgeUnity/2019-urp.unitypackage";
+		srcPathStandard = ":/DazBridgeUnity/2019-builtin.unitypackage";
+	}
+	else
+	{
+		srcPathHDRP = ":/DazBridgeUnity/2020-hdrp.unitypackage";
+		srcPathURP = ":/DazBridgeUnity/2020-urp.unitypackage";
+		srcPathStandard = ":/DazBridgeUnity/2020-builtin.unitypackage";
+	}
+
 	QFile srcFileHDRP(srcPathHDRP);
 	QString destPathHDRP = sDestinationPath + "/DazToUnity HDRP.unitypackage";
 	if (DZ_BRIDGE_NAMESPACE::DzBridgeAction::copyFile(&srcFileHDRP, &destPathHDRP, bReplace) == false)
 		bInstallSuccessful = false;
 	srcFileHDRP.close();
 
-	QString srcPathURP = ":/DazBridgeUnity/daztounity-urp.unitypackage";
 	QFile srcFileURP(srcPathURP);
 	QString destPathURP = sDestinationPath + "/DazToUnity URP.unitypackage";
 	if (DZ_BRIDGE_NAMESPACE::DzBridgeAction::copyFile(&srcFileURP, &destPathURP, bReplace) == false)
 		bInstallSuccessful = false;
 	srcFileURP.close();
 
-	QString srcPathStandard = ":/DazBridgeUnity/daztounity-standard-shader.unitypackage";
 	QFile srcFileStandard(srcPathStandard);
 	QString destPathStandard = sDestinationPath + "/DazToUnity Standard Shader.unitypackage";
 	if (DZ_BRIDGE_NAMESPACE::DzBridgeAction::copyFile(&srcFileStandard, &destPathStandard, bReplace) == false)
 		bInstallSuccessful = false;
 	srcFileStandard.close();
+
 
 	QString activePluginPath = "";
 	if (softwareVersion.contains("HDRP", Qt::CaseInsensitive))

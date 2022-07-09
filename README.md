@@ -18,17 +18,30 @@ The DazToUnity Bridge consists of two parts: a Daz Studio plugin which exports a
 
 # 2. How to Install
 ### Daz Studio Plugin ###
-After it's built you can copy the dzunitybridge.dll into the plugins folder of Daz Studio (example: "\Daz 3D\Applications\64-bit\DAZ 3D\DAZStudio4\plugins"). Daz Studio can then be started, and the bridge can be accessed from the main menu: File->Send To->Daz To Unity. The embedded Unity Packages for HDRP, URP and Built-in RenderPipelines can be installed with the "Install Unity Files" option from the export dialog window.  
+- You can install the Daz Studio plugin automatically through the Daz Install Manager or Daz Central.  This will add a new menu option under File -> Send To -> Daz To Unity.
+- For the latest release and bugfixes:
+1. Go to the [Release page](https://github.com/daz3d/DazToUnity/releases)
+2. Download the zipped **dzunitybridge.dll** (libdzunitybridge.dylib** for macOS)
+3. Unzip and copy it into the Daz Studio plugins folder (example: `\Daz 3D\Applications\64-bit\DAZ 3D\DAZStudio4\plugins`)
+
 
 ### Unity Plugin ###
-By default, the HDRP installer will be launched in Unity.  If it does not launch automatically or if you are using URP or Built-in Renderpipelines, then:
-1. Go to your Unity Editor, open the Project Panel and navigate to the `Assets\Daz3D\Support` folder.
-2. Inside that folder, you will find installation packages for all render-pipelines:
+- There is now an improved Unity plugin installer which can be accessed in the Advanced Settings section of the DazToUnity Bridge dialog in Daz Studio.
+1. Start your Unity Project and leave it in running in the background.
+2. Start Daz Studio and select File -> Send To -> DazToUnity.
+3. Enable the Advanced Settings checkbox.
+4. Select your Unity Version and Rendering Pipeline from the dropdown.
+5. Click "Install Plugin".  A window will popup for you to select a Unity Project to which to install the Unity plugin.
+6. Navigate to your Unity Project's root folder.
+7. Click "Select Folder".  You will see a confirmation dialog stating if the plugin was successfully copied to your Unity Project.
+8. Depending on your machine and setup, a Unity Import Package dialog may automatically appear.  Click Import.
+9. If an Import Package dialog does not appear, switch to your Unity Project and navigate to the `Assets\Daz3D\Support` folder.
+10. Inside that folder, you will find installation packages for all render-pipelines:
    - For HDRP: double-click "DazToUnity HDRP.unitypackage" and click Import.
    - For URP: double-click "DazToUnity URP.unitypackage" and click Import.
    - For Built-In Render-pipline: double-click "DazToUnity Standard Shader.unitypackage" and click Import.
-3. If a popup window asks you to Update the Scripts or API, then click "Yes, for these and other all files".
-4. For HDRP, you will also need to add a diffusion profile: Unity 2019: This list is found in the Material section of each HD RenderPipeline Asset, which can be found in the Quality->HDRP panel of the Project Settings dialog. Unity 2020 and above: This list is found at the bottom of the HDRP Default Settings panel in the Project Settings dialog.
+11. If a popup window asks you to Update the Scripts or API, then click "Yes, for these and other all files".
+12. For HDRP, you will also need to add a diffusion profile: Unity 2019: This list is found in the Material section of each HD RenderPipeline Asset, which can be found in the Quality->HDRP panel of the Project Settings dialog. Unity 2020 and above: This list is found at the bottom of the HDRP Default Settings panel in the Project Settings dialog.
 
 
 # 3. How to Use
