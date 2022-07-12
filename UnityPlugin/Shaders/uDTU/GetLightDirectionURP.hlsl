@@ -7,7 +7,7 @@
 
 void MainLight_half(float3 WorldPos, out half3 Direction)
 {
-#if SHADERGRAPH_PREVIEW
+#if defined(SHADERGRAPH_PREVIEW)
 	Direction = half3(0.5, 0.5, 0);
 #else
 #if SHADOWS_SCREEN
