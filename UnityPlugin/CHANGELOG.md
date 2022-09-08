@@ -1,5 +1,12 @@
 Daz To Unity Change Log:
 =================================
+Version 2022.2.4.8:
+- Bugfixed URP shader code
+- Updated to latest Daz Bridge Library v2.2
+- Fixed morph undo bug (distorted faces on export)
+- Improved Geograft material support
+- Preliminary steps for Geograft Morph support (exports blendshapes)
+
 Version 2022.1.3.7:
 - New version numbering based on Year-Revision-Bugfix
 - Updated and integrated latest updates to Daz Bridge Library

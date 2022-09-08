@@ -75,7 +75,8 @@ the tutorials or videos below to install and enable the Unity Plugin for the bri
 <li><a href=\"https://github.com/daz3d/DazToUnity/releases\">Download latest Build dependencies, updates and bugfixes (Github)</a></li>\
 <li><a href=\"https://github.com/daz3d/DazToUnity#2-how-to-install\">How To Install and Configure the Bridge (Github)</a></li>\
 <li><a href=\"https://www.daz3d.com/unity-bridge#faq\">Daz To Unity FAQ (Daz 3D)</a></li>\
-<li><a href=\"https://www.daz3d.com/forums/discussion/573571/daztounity-2022-bridge-what-s-new-and-how-to-use-it\">What's New and How To Use It (Daz 3D Forums)</a></li>\
+<li><a href=\"https://youtu.be/0dxMNzaTGLs\">How to Install the Daz to Unity Bridge (Youtube)</a></li>\
+<li><a href=\"https://www.daz3d.com/forums/discussion/573571/daztounity-2022-bridge-what-s-new-and-how-to-use-it/p1\">What's New and How To Use It (Daz 3D Forums)</a></li>\
 </ul>\
 Once the Unity plugin is enabled, please add a Character or Prop to the Scene to transfer assets using the Daz To Unity Bridge.<br><br>\
 To find out more about Daz Bridges, go to <a href=\"https://www.daz3d.com/daz-bridges\">https://www.daz3d.com/daz-bridges</a><br>\
