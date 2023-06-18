@@ -584,6 +584,13 @@ namespace Daz3D
 			var glossiness = dtuMaterial.Get("Glossiness");
 			var anisotropy = dtuMaterial.Get("Glossy Anisotropy");
 
+			// DB 2023-June-17, PBRSkin Makeup Support
+			var makeupEnable = dtuMaterial.Get("Makeup Enable", new DTUValue(0.0f));
+			var makeupWeight = dtuMaterial.Get("Makeup Weight", new DTUValue(0.0f));
+			var makeupColor = dtuMaterial.Get("Makeup Base Color", new DTUValue(1.0f));
+			var makeupRoughness = dtuMaterial.Get("Makeup Roughness Mult", new DTUValue(1.0f));
+			var makeupMetalicity = dtuMaterial.Get("Makeup Metallicity Enable", new DTUValue(0.0f));
+
 			// Per Iray Shader Documentation: http://docs.daz3d.com/doku.php/public/software/dazstudio/4/referenceguide/interface/panes/surfaces/shaders/iray_uber_shader/shader_general_concepts/start#glossy_anisotropy_rotations
 			// Glossy Anisotropy Rotations: This controls the rotation of the anisotropic effects.
 			// Its values range from 0.0 to 1.0 with the value of 1.0 equating a full rotation of 360°
@@ -1300,6 +1307,24 @@ namespace Daz3D
 					// set exposure weight to 1, aka full affect of camera exposure on emission strength
 					mat.SetFloat("_EmissionExposureWeight", 1.0f);
                 }
+
+#if USING_STANDARD_SHADER
+				// TODO: Implement PBRSkin Makeup Support for Standard Shader
+#else
+				// DB 2023-June-17: PBRSkin Makeup Support for HDRP and URP
+				// TODO: Implement Makeup Metallicity Support
+				if (dtuMaterial.MaterialType == "PBRSkin")
+				{
+					mat.SetFloat("_MakeupEnable", makeupEnable.Float);
+					mat.SetFloat("_MakeupWeightValue", makeupWeight.Float);
+					mat.SetTexture("_MakeupWeightMap",ImportTextureFromPath(makeupWeight.Texture, textureDir, record, false, true));
+					mat.SetColor("_MakeupBaseColor",makeupColor.Color);
+					mat.SetTexture("_MakeupBaseMap",ImportTextureFromPath(makeupColor.Texture, textureDir, record));
+					mat.SetFloat("_MakeupRoughnessMultiplierValue", makeupRoughness.Float);
+					mat.SetTexture("_MakeupRoughnessMultiplierMap",ImportTextureFromPath(makeupRoughness.Texture, textureDir, record, false, true));
+					//mat.setFloat("_MakeupMetallicity", makeupMetallicity.Float);
+				}
+#endif
 
 				//TODO: support displacement maps and tessellation
 				//TODO: support alternate uv sets (this can be done easier in code then in the shader though)
