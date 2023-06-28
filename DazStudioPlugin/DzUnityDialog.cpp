@@ -62,27 +62,33 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 
 	 // Set the dialog title
 #ifdef _PRE_RELEASE
-	 setWindowTitle(tr("DazToUnity Bridge v%1.%2 Pre-Release Build %3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD));
+	 setWindowTitle(tr("DazToUnity Bridge %1 v%2.%3.%4 Pre-Release Build").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD));
 #else
-	 setWindowTitle(tr("DazToUnity Bridge v%1.%2").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR));
+	 setWindowTitle(tr("DazToUnity Bridge %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
 #endif
 
 	 // Welcome String for Setup/Welcome Mode
-	 QString sSetupModeString = tr("<h4>\
-If this is your first time using the Daz To Unity Bridge, please be sure to read or watch \
-the tutorials or videos below to install and enable the Unity Plugin for the bridge:</h4>\
-<ul>\
-<li><a href=\"https://github.com/daz3d/DazToUnity/releases\">Download latest Build dependencies, updates and bugfixes (Github)</a></li>\
-<li><a href=\"https://github.com/daz3d/DazToUnity#2-how-to-install\">How To Install and Configure the Bridge (Github)</a></li>\
-<li><a href=\"https://www.daz3d.com/unity-bridge#faq\">Daz To Unity FAQ (Daz 3D)</a></li>\
-<li><a href=\"https://youtu.be/0dxMNzaTGLs\">How to Install the Daz to Unity Bridge (Youtube)</a></li>\
-<li><a href=\"https://www.daz3d.com/forums/discussion/573571/daztounity-2022-bridge-what-s-new-and-how-to-use-it/p1\">What's New and How To Use It (Daz 3D Forums)</a></li>\
-</ul>\
-Once the Unity plugin is enabled, please add a Character or Prop to the Scene to transfer assets using the Daz To Unity Bridge.<br><br>\
-To find out more about Daz Bridges, go to <a href=\"https://www.daz3d.com/daz-bridges\">https://www.daz3d.com/daz-bridges</a><br>\
+	 QString sDazAppDir = dzApp->getHomePath().replace("\\","/");
+	 QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Unity/Daz to Unity.pdf";
+	 QString sSetupModeString = tr("\
+<div style=\"background-color:#282f41;\" align=center>\
+<img src=\":/DazBridgeUnity/banner.jpg\" width=\"370\" height=\"95\" align=\"center\" hspace=\"0\" vspace=\"0\">\
+<table width=100% cellpadding=8 cellspacing=2 style=\"vertical-align:middle; font-size:x-large; font-weight:bold; background-color:#FFAA00;foreground-color:#FFFFFF\" align=center>\
+  <tr>\
+    <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"https://www.daz3d.com/unity-bridge#faq\">FAQ</a></div></td>\
+    <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"https://youtu.be/_Em9sNdw1Dw\">Installation Video</a></td>\
+    <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"https://youtu.be/B_szQcX_i3I\">Tutorial Video</a></td>\
+  </tr>\
+  <tr>\
+    <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"") + sPdfPath + tr("\">PDF</a></td>\
+    <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"https://www.daz3d.com/forums/categories/unity-discussion\">Forums</a></td>\
+    <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"https://github.com/daz3d/DazToUnity/issues\">Report Bug</a></td>\
+  </tr>\
+</table>\
+</div>\
 ");
 	 m_WelcomeLabel->setText(sSetupModeString);
-	 QString sBridgeVersionString = tr("Daz To Unity Bridge %1.%2 revision %3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD);
+	 QString sBridgeVersionString = tr("Daz To Unity Bridge %1 v%2.%3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD);
 	 setBridgeVersionStringAndLabel(sBridgeVersionString);
 
 

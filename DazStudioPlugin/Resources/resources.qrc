@@ -7,8 +7,7 @@
         <file alias="2020-hdrp.unitypackage">DazToUnity_2020_HDRP.unitypackage</file>
         <file alias="2020-urp.unitypackage">DazToUnity_2020_URP.unitypackage</file>
         <file alias="2020-builtin.unitypackage">DazToUnity_2020_Builtin.unitypackage</file>
-    </qresource>
-    <qresource prefix="/DazBridgeUnity/Images">
         <file alias="icon">Images/Icon.png</file>
+        <file alias="banner.jpg">Images/banner.jpg</file>
     </qresource>
 </RCC>

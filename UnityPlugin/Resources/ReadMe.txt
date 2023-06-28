@@ -1,4 +1,4 @@
-Daz To Unity version 2022.2.4.8
+Daz To Unity version 2023.1.0.9
 =============================================
 
 Description:
@@ -10,11 +10,8 @@ The Daz To Unity Bridge consists of two major parts:
 
 New in this version:
 ====================
-- Bugfixed URP shader code
-- Updated to latest Daz Bridge Library v2.2
-- Fixed morph undo bug (distorted faces on export)
-- Improved Geograft material support
-- Preliminary steps for Geograft Morph support (exports blendshapes)
+- PBRSkin Makeup support
+- Improved Geografts (duplicate removal)
 
 
 Known Issues:

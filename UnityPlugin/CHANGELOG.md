@@ -1,5 +1,9 @@
 Daz To Unity Change Log:
 =================================
+Version 2023.1.0.9:
+- PBRSkin Makeup support
+- Improved Geografts (duplicate removal)
+
 Version 2022.2.4.8:
 - Bugfixed URP shader code
 - Updated to latest Daz Bridge Library v2.2
