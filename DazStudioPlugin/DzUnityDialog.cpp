@@ -80,7 +80,7 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
     <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"https://youtu.be/B_szQcX_i3I\">Tutorial Video</a></td>\
   </tr>\
   <tr>\
-    <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"") + sPdfPath + tr("\">PDF</a></td>\
+    <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"file:///") + sPdfPath + tr("\">PDF</a></td>\
     <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"https://www.daz3d.com/forums/categories/unity-discussion\">Forums</a></td>\
     <td width=33% style=\"text-align:center; background-color:#282f41;\"><div align=center><a href=\"https://github.com/daz3d/DazToUnity/issues\">Report Bug</a></td>\
   </tr>\
