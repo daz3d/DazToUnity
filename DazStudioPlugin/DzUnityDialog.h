@@ -36,10 +36,11 @@ public:
 protected slots:
 	void HandleSelectAssetsFolderButton();
 	void HandleInstallUnityFilesCheckBoxChange(int state);
-	void HandleAssetTypeComboChange(int state);
 	void HandleAssetFolderChanged(const QString& directoryName);
-	void HandleTargetPluginInstallerButton();
-	virtual void HandleOpenIntermediateFolderButton(QString sFolderPath = "") override;
+	void HandleAssetTypeComboChange(int state) override;
+	void HandleTargetPluginInstallerButton() override;
+	void HandleOpenIntermediateFolderButton(QString sFolderPath = "") override;
+	void HandleAssetTypeComboChange(const QString& assetType) override;
 
 protected:
 	QLineEdit* projectEdit;

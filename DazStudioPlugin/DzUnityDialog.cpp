@@ -91,6 +91,8 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 QString sBridgeVersionString = tr("Daz To Unity Bridge %1 v%2.%3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD);
 	 setBridgeVersionStringAndLabel(sBridgeVersionString);
 
+	// Rename Animation Options Box
+	animationSettingsGroupBox->setTitle("Animation Settings");
 
 	 // Disable unsupported AssetType ComboBox Options
 	 QStandardItemModel* model = qobject_cast<QStandardItemModel*>(assetTypeCombo->model());
@@ -116,6 +118,11 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 installOrOverwriteUnityFilesLabel = new QLabel(tr("Install Unity Files"));
 	 installUnityFilesCheckBox = new QCheckBox("", this);
 	 connect(installUnityFilesCheckBox, SIGNAL(stateChanged(int)), this, SLOT(HandleInstallUnityFilesCheckBoxChange(int)));
+
+	// Disable Experimental Options Checkbox
+	m_enableExperimentalOptionsCheckBox->setEnabled(false);
+	m_enableExperimentalOptionsCheckBox->setToolTip(tr("No experimental options in this version."));
+	m_enableExperimentalOptionsCheckBox->setWhatsThis(tr("No experimental options in this version."));
 
 	 // Add the widget to the basic dialog
 	 mainLayout->insertRow(1, "Unity Assets Folder", assetsFolderLayout);
@@ -291,6 +298,13 @@ void DzUnityDialog::HandleSelectAssetsFolderButton()
 void DzUnityDialog::HandleInstallUnityFilesCheckBoxChange(int state)
 {
 	 settings->setValue("InstallUnityFiles", state == Qt::Checked);
+}
+
+void DzUnityDialog::HandleAssetTypeComboChange(const QString& assetType)
+{
+	// DB 2023-Aug-10: Override default Base class behavior which hides Animation options behind Experimental Options mode
+	animationSettingsGroupBox->setVisible(assetType == "Animation" || assetType == "Pose");
+
 }
 
 void DzUnityDialog::HandleAssetTypeComboChange(int state)
