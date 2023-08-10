@@ -1,4 +1,4 @@
-Daz To Unity version 2023.1.0.9
+Daz To Unity 2023 version 1.1.11
 =============================================
 
 Description:
@@ -10,10 +10,8 @@ The Daz To Unity Bridge consists of two major parts:
 
 New in this version:
 ====================
-Version 2023.1.0.9:
-- PBRSkin Makeup support
-- Improved Geografts (duplicate removal)
-
+Version 2023.1.1.11:
+- Integration with latest Daz Bridge Library v1.1 
 
 Known Issues:
 =============
