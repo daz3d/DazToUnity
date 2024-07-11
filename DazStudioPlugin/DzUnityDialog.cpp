@@ -167,6 +167,11 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 {
 		 setDisabled(true);
 	 }
+
+	 // Daz Ultra
+	 m_WelcomeLabel->hide();
+	 setWindowTitle(tr("Unity Export Options"));
+
 }
 
 bool DzUnityDialog::loadSavedSettings()

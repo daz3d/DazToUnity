@@ -38,7 +38,7 @@
 #include "dzbridge.h"
 
 DzUnityAction::DzUnityAction() :
-	DzBridgeAction(tr("Daz To &Unity"), tr("Send the selected node to Unity."))
+	DzBridgeAction(tr("Send to &Unity..."), tr("Send the selected node to Unity."))
 {
 	m_nNonInteractiveMode = 0;
 	m_sAssetType = QString("SkeletalMesh");
