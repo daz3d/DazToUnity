@@ -108,7 +108,9 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 // Intermediate Folder
 	 QHBoxLayout* assetsFolderLayout = new QHBoxLayout();
 	 assetsFolderEdit = new QLineEdit(this);
-	 assetsFolderButton = new QPushButton("...", this);
+	 assetsFolderEdit->setFixedHeight(wgtHeight);
+	 //assetsFolderButton = new QPushButton("...", this);
+	 assetsFolderButton = new DzBridgeBrowseButton(this);
 	 assetsFolderLayout->addWidget(assetsFolderEdit);
 	 assetsFolderLayout->addWidget(assetsFolderButton);
 	 connect(assetsFolderEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleAssetFolderChanged(const QString&)));
