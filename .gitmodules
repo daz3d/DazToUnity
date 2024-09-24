@@ -1,4 +1,4 @@
 [submodule "dzbridge-common"]
 	path = dzbridge-common
-	url = https://github.com/daz3d/DazBridgeUtils.git
+	url = https://github.com/dbui-private/DazBridgeUtils-private.git
 	branch = dzbridge-library
