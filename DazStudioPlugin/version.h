@@ -1,10 +1,9 @@
 #pragma once
+#include "real_version.h"
 #include "dzversion.h"
 
 // Version number for dzBridge-Unity
-#define PLUGIN_MAJOR	2024
-#define PLUGIN_MINOR	1
-#define PLUGIN_REV		1
-#define PLUGIN_BUILD	12
-
-#define PLUGIN_VERSION	DZ_MAKE_VERSION( PLUGIN_MAJOR, PLUGIN_MINOR, PLUGIN_REV, PLUGIN_BUILD )
+#define PLUGIN_MAJOR	VER_MAJOR
+#define PLUGIN_MINOR	VER_MINOR
+#define PLUGIN_REV		VER_REV
+#define PLUGIN_BUILD	VER_BUILD
