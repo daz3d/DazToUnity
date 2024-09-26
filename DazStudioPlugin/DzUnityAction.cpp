@@ -40,6 +40,8 @@
 DzUnityAction::DzUnityAction() :
 	DzBridgeAction(tr("Send to &Unity..."), tr("Send the selected node to Unity."))
 {
+	this->setObjectName("DzBridge_DazToUnity_Action");
+
 	m_nNonInteractiveMode = 0;
 	m_sAssetType = QString("SkeletalMesh");
 	//Setup Icon

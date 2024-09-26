@@ -47,6 +47,8 @@ Local definitions
 DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 DzBridgeDialog(parent, DAZ_TO_UNITY_PLUGIN_NAME)
 {
+	 this->setObjectName("DzBridge_DazToUnity_Dialog");
+
 	 projectEdit = nullptr;
 	 projectButton = nullptr;
 	 assetsFolderEdit = nullptr;
