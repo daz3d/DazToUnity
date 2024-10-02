@@ -29,6 +29,7 @@ protected:
 	 Q_INVOKABLE void setExportOptions(DzFileIOSettings& ExportOptions);
 	 Q_INVOKABLE QString createUnityFiles(bool replace = true);
 	 QString readGuiRootFolder();
+	 Q_INVOKABLE virtual bool readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog*) override;
 
 #ifdef UNITTEST_DZBRIDGE
 	friend class UnitTest_DzUnityAction;

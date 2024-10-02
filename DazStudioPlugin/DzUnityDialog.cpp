@@ -99,8 +99,8 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 // Disable unsupported AssetType ComboBox Options
 	 QStandardItemModel* model = qobject_cast<QStandardItemModel*>(assetTypeCombo->model());
 	 QStandardItem* item = nullptr;
-	 item = model->findItems("Environment").first();
-	 if (item) item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+//	 item = model->findItems("Environment").first();
+//	 if (item) item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 	 item = model->findItems("Pose").first();
 	 if (item) item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 
@@ -175,6 +175,12 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 // Daz Ultra
 	 m_WelcomeLabel->hide();
 	 setWindowTitle(tr("Unity Export Options"));
+	 wHelpMenuButton->show();
+
+//	 disableAcceptUntilAllRequirementsValid();
+
+	 fixRowLabelStyle();
+	 fixRowLabelWidths();
 
 }
 
@@ -309,16 +315,13 @@ void DzUnityDialog::HandleInstallUnityFilesCheckBoxChange(int state)
 	 settings->setValue("InstallUnityFiles", state == Qt::Checked);
 }
 
-void DzUnityDialog::HandleAssetTypeComboChange(const QString& assetType)
-{
-	// DB 2023-Aug-10: Override default Base class behavior which hides Animation options behind Experimental Options mode
-	animationSettingsGroupBox->setVisible(assetType == "Animation" || assetType == "Pose");
-
-}
-
 void DzUnityDialog::HandleAssetTypeComboChange(int state)
 {
 	QString assetNameString = assetNameEdit->text();
+
+	// DB 2023-Aug-10: Override default Base class behavior which hides Animation options behind Experimental Options mode
+	QString assetType = assetTypeCombo->currentText();
+	animationSettingsGroupBox->setVisible(assetType == "Animation" || assetType == "Pose");
 
 	// enable/disable Morphs and Subdivision only if Skeletal selected
 	if (assetTypeCombo->currentText() != "Skeletal Mesh")
@@ -586,5 +589,26 @@ void DzUnityDialog::setDisabled(bool bDisabled)
 	installUnityFilesCheckBox->setDisabled(bDisabled);
 
 }
+
+#include <QUrl>
+void DzUnityDialog::HandlePdfButton()
+{
+	QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
+	QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Unity/Daz to Unity.pdf";
+	QDesktopServices::openUrl(QUrl(sPdfPath));
+}
+
+void DzUnityDialog::HandleYoutubeButton()
+{
+	QString url = "https://youtu.be/B_szQcX_i3I";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+void DzUnityDialog::HandleSupportButton()
+{
+	QString url = "https://bugs.daz3d.com/hc/en-us/requests/new";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
 
 #include "moc_DzUnityDialog.cpp"

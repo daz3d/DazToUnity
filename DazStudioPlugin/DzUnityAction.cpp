@@ -25,6 +25,8 @@
 #include "dzfacetmesh.h"
 #include "dzfacegroup.h"
 #include "dzprogress.h"
+#include "dzexporter.h"
+#include "dzexportmgr.h"
 
 #include "DzUnityAction.h"
 #include "DzUnityDialog.h"
@@ -98,6 +100,9 @@ bool DzUnityAction::createUI()
 
 void DzUnityAction::executeAction()
 {
+	m_nExecuteActionResult = DZ_OPERATION_FAILED_ERROR;
+	m_eSelectedNodeAssetType = DZ_BRIDGE_NAMESPACE::EAssetType::None;
+
 	// CreateUI() disabled for debugging -- 2022-Feb-25
 	/*
 		 // Create and show the dialog. If the user cancels, exit early,
@@ -120,9 +125,9 @@ void DzUnityAction::executeAction()
 		return;
 	}
 
-	bool bDefaultToEnvironment = false;
-	if (SelectBestRootNodeForTransfer() == DZ_BRIDGE_NAMESPACE::EAssetType::Other) {
-		bDefaultToEnvironment = true;
+	if (m_nNonInteractiveMode != DZ_BRIDGE_NAMESPACE::eNonInteractiveMode::DzExporterMode) {
+		m_eSelectedNodeAssetType = SelectBestRootNodeForTransfer(true);
+		m_pSelectedNode = dzScene->getPrimarySelection();
 	}
 
 	// Create the dialog
@@ -169,9 +174,8 @@ void DzUnityAction::executeAction()
 
 	}
 
-	if (bDefaultToEnvironment) {
-		int nEnvIndex = m_bridgeDialog->getAssetTypeCombo()->findText("Environment");
-		m_bridgeDialog->getAssetTypeCombo()->setCurrentIndex(nEnvIndex);
+	if (m_nNonInteractiveMode != DZ_BRIDGE_NAMESPACE::eNonInteractiveMode::DzExporterMode) {
+		m_bridgeDialog->setEAssetType(m_eSelectedNodeAssetType);
 	}
 
 	// If the Accept button was pressed, start the export
@@ -182,39 +186,91 @@ void DzUnityAction::executeAction()
 	}
 	if (m_nNonInteractiveMode == 1 || dlgResult == QDialog::Accepted)
 	{
-		// DB 2021-10-11: Progress Bar
-		DzProgress* exportProgress = new DzProgress("Sending to Unity...", 10);
 
-		// Read Common GUI values
-		readGui(m_bridgeDialog);
-
-		// Read Custom GUI values
-		DzUnityDialog* unityDialog = qobject_cast<DzUnityDialog*>(m_bridgeDialog);
-		if (unityDialog)
-			m_bInstallUnityFiles = unityDialog->installUnityFilesCheckBox->isChecked();
-		// custom animation filename correction for Unity
-		if (m_sAssetType == "Animation")
+		// Read GUI values
+		if (readGui(m_bridgeDialog) == false)
 		{
-			if (m_nNonInteractiveMode == 0)
-			{
-				// correct CharacterFolder
-				m_sExportSubfolder = m_sAssetName.left(m_sAssetName.indexOf("@"));
-				m_sDestinationPath = m_sRootFolder + "/" + m_sExportSubfolder + "/";
-				// correct animation filename
-				m_sDestinationFBX = m_sDestinationPath + m_sAssetName + ".fbx";
-			}
+			m_nExecuteActionResult = DZ_OPERATION_FAILED_ERROR;
+			return;
 		}
+
+		// DB 2021-10-11: Progress Bar
+		DzProgress* exportProgress = new DzProgress("Sending to Unity...", 10, false, true);
+
+		DzError result = doPromptableObjectBaking();
+		if (result != DZ_NO_ERROR) {
+			exportProgress->finish();
+			exportProgress->cancel();
+			m_nExecuteActionResult = result;
+			return;
+		}
+		exportProgress->step();
 
 		//Create Daz3D folder if it doesn't exist
 		QDir dir;
 		dir.mkpath(m_sRootFolder);
 		exportProgress->step();
 
-		exportHD(exportProgress);
+		if (m_sAssetType == "Environment") {
 
-		// DB 2021-10-11: Progress Bar
-		exportProgress->finish();
+			QDir().mkdir(m_sDestinationPath);
+			m_pSelectedNode = dzScene->getPrimarySelection();
 
+			auto objectList = dzScene->getNodeList();
+			foreach(auto el, objectList) {
+				DzNode* pNode = qobject_cast<DzNode*>(el);
+				preProcessScene(pNode);
+			}
+			DzExportMgr* ExportManager = dzApp->getExportMgr();
+			DzExporter* Exporter = ExportManager->findExporterByClassName("DzFbxExporter");
+			DzFileIOSettings ExportOptions;
+			ExportOptions.setBoolValue("IncludeSelectedOnly", false);
+			ExportOptions.setBoolValue("IncludeVisibleOnly", true);
+			ExportOptions.setBoolValue("IncludeFigures", true);
+			ExportOptions.setBoolValue("IncludeProps", true);
+			ExportOptions.setBoolValue("IncludeLights", false);
+			ExportOptions.setBoolValue("IncludeCameras", false);
+			ExportOptions.setBoolValue("IncludeAnimations", true);
+			ExportOptions.setIntValue("RunSilent", !m_bShowFbxOptions);
+			setExportOptions(ExportOptions);
+			// NOTE: be careful to use m_sExportFbx and NOT m_sExportFilename since FBX and DTU base name may differ
+			QString sEnvironmentFbx = m_sDestinationPath + m_sExportFbx + ".fbx";
+			DzError result = Exporter->writeFile(sEnvironmentFbx, &ExportOptions);
+			if (result != DZ_NO_ERROR) {
+				undoPreProcessScene();
+				m_nExecuteActionResult = result;
+				exportProgress->finish();
+				exportProgress->cancel();
+				return;
+			}
+			exportProgress->step();
+
+			writeConfiguration();
+			exportProgress->step();
+
+			undoPreProcessScene();
+			exportProgress->step();
+
+		}
+		else
+		{
+			DzNode* pParentNode = NULL;
+			if (m_pSelectedNode->isRootNode() == false) {
+				dzApp->log("INFO: Selected Node for Export is not a Root Node, unparenting now....");
+				pParentNode = m_pSelectedNode->getNodeParent();
+				pParentNode->removeNodeChild(m_pSelectedNode, true);
+				dzApp->log("INFO: Parent stored: " + pParentNode->getLabel() + ", New Root Node: " + m_pSelectedNode->getLabel());
+			}
+			exportProgress->step();
+			exportHD(exportProgress);
+			exportProgress->step();
+			if (pParentNode) {
+				dzApp->log("INFO: Restoring Parent relationship: " + pParentNode->getLabel() + ", child node: " + m_pSelectedNode->getLabel());
+				pParentNode->addNodeChild(m_pSelectedNode, true);
+			}
+		}
+
+		exportProgress->update(10);
 		// DB 2021-09-02: messagebox "Export Complete"
 		if (m_nNonInteractiveMode == 0)
 		{
@@ -236,7 +292,13 @@ file located in the Assets\\Daz3D\\Support\\ folder of your Unity Project."), QM
 			}
 		}
 
+		// DB 2021-10-11: Progress Bar
+		exportProgress->finish();
+
 	}
+
+	m_nExecuteActionResult = DZ_NO_ERROR;
+
 }
 
 QString DzUnityAction::createUnityFiles(bool replace)
@@ -339,5 +401,36 @@ QString DzUnityAction::readGuiRootFolder()
 	}
 	return rootFolder;
 }
+
+bool DzUnityAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* pBridgeDialog)
+{
+	bool bResult = DzBridgeAction::readGui(pBridgeDialog);
+	if (!bResult)
+	{
+		return false;
+	}
+
+	// Read Custom GUI values
+	DzUnityDialog* unityDialog = qobject_cast<DzUnityDialog*>(pBridgeDialog);
+	if (unityDialog)
+		m_bInstallUnityFiles = unityDialog->installUnityFilesCheckBox->isChecked();
+	// custom animation filename correction for Unity
+	if (m_sAssetType == "Animation")
+	{
+		if (m_nNonInteractiveMode == 0)
+		{
+			// correct CharacterFolder
+			m_sExportSubfolder = m_sAssetName.left(m_sAssetName.indexOf("@"));
+			m_sDestinationPath = m_sRootFolder + "/" + m_sExportSubfolder + "/";
+			// correct animation filename
+			m_sDestinationFBX = m_sDestinationPath + m_sAssetName + ".fbx";
+		}
+	}
+
+	return true;
+}
+
+
+
 
 #include "moc_DzUnityAction.cpp"

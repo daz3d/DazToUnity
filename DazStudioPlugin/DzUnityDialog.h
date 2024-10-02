@@ -40,7 +40,9 @@ protected slots:
 	void HandleAssetTypeComboChange(int state) override;
 	void HandleTargetPluginInstallerButton() override;
 	void HandleOpenIntermediateFolderButton(QString sFolderPath = "") override;
-	void HandleAssetTypeComboChange(const QString& assetType) override;
+	void HandlePdfButton() override;
+	void HandleYoutubeButton() override;
+	void HandleSupportButton() override;
 
 protected:
 	QLineEdit* projectEdit;
