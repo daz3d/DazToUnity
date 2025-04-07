@@ -212,15 +212,29 @@ void DzUnityAction::executeAction()
 		exportProgress->step();
 
 		if (m_sAssetType == "Environment") {
+			// Sanity Check if zero nodes
+			if (dzScene->getNumNodes() == 0) {
+				dzApp->log("DazToBlender: CRITICAL ERROR: executeAction() Environment Export with zero nodes. Aborting.");
+				exportProgress->finish();
+				exportProgress->cancel();
+				m_nExecuteActionResult = DZ_OPERATION_FAILED_ERROR;
+				return;
+			}
 
 			QDir().mkdir(m_sDestinationPath);
 			m_pSelectedNode = dzScene->getPrimarySelection();
 
-			auto objectList = dzScene->getNodeList();
-			foreach(auto el, objectList) {
-				DzNode* pNode = qobject_cast<DzNode*>(el);
-				preProcessScene(pNode);
+			exportProgress->step();
+			DzNodeList rootNodeList = BuildRootNodeList();
+			if (rootNodeList.isEmpty()) {
+				exportProgress->finish();
+				exportProgress->cancel();
+				m_nExecuteActionResult = DZ_OPERATION_FAILED_ERROR;
+				return;
 			}
+			m_pSelectedNode = rootNodeList[0];
+			preProcessScene(NULL);
+
 			DzExportMgr* ExportManager = dzApp->getExportMgr();
 			DzExporter* Exporter = ExportManager->findExporterByClassName("DzFbxExporter");
 			DzFileIOSettings ExportOptions;
@@ -334,9 +348,15 @@ QString DzUnityAction::createUnityFiles(bool replace)
 
 void DzUnityAction::writeConfiguration()
 {
+	DzProgress* pDtuProgress = new DzProgress("Writing DTU file", 10, false, true);
+
 	QString DTUfilename = m_sDestinationPath + m_sExportFilename + ".dtu";
 	QFile DTUfile(DTUfilename);
-	DTUfile.open(QIODevice::WriteOnly);
+	if (!DTUfile.open(QIODevice::WriteOnly)) {
+		QString sErrorMessage = tr("ERROR: DzBridge: writeConfigureation(): unable to open file for writing: ") + DTUfilename;
+		dzApp->log(sErrorMessage);
+		return;
+	}
 	DzJsonWriter writer(&DTUfile);
 	writer.startObject(true);
 
@@ -368,11 +388,60 @@ void DzUnityAction::writeConfiguration()
 
 	if (m_sAssetType == "Environment")
 	{
-		writeEnvironment(writer);
+#define DZ_UNITY_TEMPORARY_ENV_EXPORT_WORKAROUND 1
+#if DZ_UNITY_TEMPORARY_ENV_EXPORT_WORKAROUND
+		QTextStream* pCVSStream = nullptr;
+		if (m_bExportMaterialPropertiesCSV)
+		{
+			QString filename = m_sDestinationPath + m_sExportFilename + "_Maps.csv";
+			QFile file(filename);
+			file.open(QIODevice::WriteOnly);
+			pCVSStream = new QTextStream(&file);
+			*pCVSStream << "Version, Object, Material, Type, Color, Opacity, File" << endl;
 	}
+		pDtuProgress->update(6);
+		if (m_sAssetType == "Environment") {
+			writeSceneMaterials(writer, pCVSStream);
+			pDtuProgress->step();
+			writeSceneDefinition(writer);
+		}
+		else {
+			writeAllMaterials(m_pSelectedNode, writer, pCVSStream);
+			pDtuProgress->step();
+		}
+
+		writeAllMorphs(writer);
+		writeMorphLinks(writer);
+		writeMorphNames(writer);
+		pDtuProgress->step();
+
+		DzBoneList aBoneList = getAllBones(m_pSelectedNode);
+
+		writeSkeletonData(m_pSelectedNode, writer);
+		writeHeadTailData(m_pSelectedNode, writer);
+		writeJointOrientation(aBoneList, writer);
+		writeLimitData(aBoneList, writer);
+		writePoseData(m_pSelectedNode, writer, true);
+		pDtuProgress->step();
+
+		writeAllSubdivisions(writer);
+		pDtuProgress->step();
+		writeAllDforceInfo(m_pSelectedNode, writer);
+		pDtuProgress->step();
+
+#else
+		writeEnvironment(writer);
+#endif
+	}
+
+	//m_ImageToolsJobsManager->processJobs();
+	//m_ImageToolsJobsManager->clearJobs();
 
 	writer.finishObject();
 	DTUfile.close();
+
+	pDtuProgress->finish();
+
 }
 
 // Setup custom FBX export options
