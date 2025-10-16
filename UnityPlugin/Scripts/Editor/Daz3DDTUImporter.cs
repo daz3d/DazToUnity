@@ -284,6 +284,8 @@ namespace Daz3D
             Daz3DBridge.Progress = .9f;
                 yield return new WaitForEndOfFrame();
 
+            AssignFbxImporterMaterials(fbxPath);
+
             if (GenerateUnityPrefab)
                 GeneratePrefabFromFBX(fbxPath, platform, dtu);
 
@@ -1103,6 +1105,34 @@ namespace Daz3D
             }
         }
 
+        public static void AssignFbxImporterMaterials(string fbxPath)
+        {
+            Debug.Log("Attempting to assign materials to fbx: " + fbxPath + " ....");
+
+            ModelImporter importer = AssetImporter.GetAtPath(fbxPath) as ModelImporter;
+            if (importer == null)
+            {
+                Debug.LogError("Not a valid FBX importer: " + fbxPath);
+                return;
+            }
+
+            importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+            importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
+
+		    try
+		    {
+			    importer.SearchAndRemapMaterials(
+				ModelImporterMaterialName.BasedOnMaterialName,
+				ModelImporterMaterialSearch.Local);
+		    }
+		    catch (System.MissingMethodException) { }
+
+    		AssetDatabase.WriteImportSettingsIfDirty(fbxPath);
+	    	AssetDatabase.ImportAsset(fbxPath, ImportAssetOptions.ForceUpdate);
+            importer.SaveAndReimport();
+
+            Debug.Log("DEBUG: AssignFbxImporterMaterials(): done");
+        }
 
         private static void DescribeHumanJointsForFigure(ref HumanDescription description, DazFigurePlatform figure)
         {

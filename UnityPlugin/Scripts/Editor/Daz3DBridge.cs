@@ -109,7 +109,7 @@ namespace Daz3D
 
                     // when import done, export package using unity asset package exporter
                     var exportPath = "D:/Exports/" + foldername + ".unitypackage";
-                    AssetDatabase.ExportPackage(localPath, exportPath, ExportPackageOptions.Recurse | ExportPackageOptions.IncludeDependencies);
+                    AssetDatabase.ExportPackage(localPath + "/" + fbxFilename, exportPath, ExportPackageOptions.Recurse | ExportPackageOptions.IncludeDependencies);
 
                 }
 
