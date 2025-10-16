@@ -1119,13 +1119,13 @@ namespace Daz3D
             importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
             importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
 
-		    try
-		    {
-			    importer.SearchAndRemapMaterials(
-				ModelImporterMaterialName.BasedOnMaterialName,
-				ModelImporterMaterialSearch.Local);
-		    }
-		    catch (System.MissingMethodException) { }
+            try
+            {
+                importer.SearchAndRemapMaterials(
+                ModelImporterMaterialName.BasedOnMaterialName,
+                ModelImporterMaterialSearch.Local);
+            }
+            catch (System.MissingMethodException) { }
 
     		AssetDatabase.WriteImportSettingsIfDirty(fbxPath);
 	    	AssetDatabase.ImportAsset(fbxPath, ImportAssetOptions.ForceUpdate);
@@ -1133,6 +1133,51 @@ namespace Daz3D
 
             Debug.Log("DEBUG: AssignFbxImporterMaterials(): done");
         }
+
+        public static void ExtractAndAssignFbxImporterMaterials(string fbxPath, string textureFolder, string materialFolder)
+        {
+            Debug.Log("Attempting to extract and assign materials to fbx: " + fbxPath + " ....");
+
+            ModelImporter importer = AssetImporter.GetAtPath(fbxPath) as ModelImporter;
+            if (importer == null)
+            {
+                Debug.LogError("Not a valid FBX importer: " + fbxPath);
+                return;
+            }
+
+            importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+            importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
+            importer.ExtractTextures(textureFolder);
+
+            UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(fbxPath);
+            foreach (UnityEngine.Object o in assets)
+            {
+                if (o is Material mat)
+                {
+                    string matPath = Path.Combine(materialFolder, mat.name + ".mat");
+                    matPath = AssetDatabase.GenerateUniqueAssetPath(matPath);
+                    Material newMat = UnityEngine.Object.Instantiate(mat);
+                    AssetDatabase.CreateAsset(newMat, matPath);
+                    Debug.Log("Saved " + mat.name + " to " + matPath);
+                }
+            }
+            AssetDatabase.SaveAssets();
+
+            try
+            {
+                importer.SearchAndRemapMaterials(
+                    ModelImporterMaterialName.BasedOnMaterialName,
+                    ModelImporterMaterialSearch.Local);
+            }
+            catch (System.MissingMethodException) { }
+
+            AssetDatabase.WriteImportSettingsIfDirty(fbxPath);
+            AssetDatabase.ImportAsset(fbxPath, ImportAssetOptions.ForceUpdate);
+            importer.SaveAndReimport();
+
+            Debug.Log("DEBUG: ExtractAndAssignFbxImporterMaterials(): done");
+        }
+
 
         private static void DescribeHumanJointsForFigure(ref HumanDescription description, DazFigurePlatform figure)
         {

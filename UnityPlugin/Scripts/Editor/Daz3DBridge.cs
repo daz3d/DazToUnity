@@ -57,8 +57,15 @@ namespace Daz3D
             // 2. Read into string array or string list
             string[] lines = System.IO.File.ReadAllLines("autoexec-jobpool.txt");
 
+            bool bFbxOnlyPathway = false;
             foreach (string line in lines)
             {
+                if (line.EndsWith(".fbx", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    bFbxOnlyPathway = true;
+                    break;
+                }
+
                 // 3. sequentially ImportDTU
                 string dtuPath = line;
                 if (System.IO.File.Exists(dtuPath) && dtuPath.ToLower().Contains(".dtu"))
@@ -113,6 +120,48 @@ namespace Daz3D
 
                 }
 
+            }
+
+            if (bFbxOnlyPathway)
+            {
+                foreach (string line in lines)
+                {
+                    string sourceFbx = line;
+                    // get filename
+                    string fbxFilename = System.IO.Path.GetFileName(sourceFbx);
+
+                    // get container folder
+                    var sourceFolder = System.IO.Path.GetDirectoryName(sourceFbx);
+                    var ext = System.IO.Path.GetExtension(fbxFilename);
+                    var foldername = fbxFilename.Replace(ext, "");
+                    var destinationFolder = "Assets/" + foldername;
+                    var destinationFbx = destinationFolder + "/" + fbxFilename;
+
+                    // create locally in assets if not exists
+                    if (System.IO.Directory.Exists(destinationFolder) == false)
+                    {
+                        System.IO.Directory.CreateDirectory(destinationFolder);
+                    }
+                    if (System.IO.File.Exists(destinationFbx) == false)
+                    {
+                        // copy DTU to local container
+                        System.IO.File.Copy(sourceFbx, destinationFbx);
+                        Debug.Log("FBX copied to: " + destinationFbx);
+                        AssetDatabase.Refresh();
+                    }
+
+                    // Extract textures and materials
+                    var textureFolder = destinationFolder + "/Textures";
+                    var materialFolder = destinationFolder + "/Materials";
+                    if (!System.IO.Directory.Exists(textureFolder)) System.IO.Directory.CreateDirectory(textureFolder);
+                    if (!System.IO.Directory.Exists(materialFolder)) System.IO.Directory.CreateDirectory(materialFolder);
+                    Daz3DDTUImporter.ExtractAndAssignFbxImporterMaterials(destinationFbx, textureFolder, materialFolder);
+
+                    // when import done, export package using unity asset package exporter
+                    var exportPackagePath = "D:/Exports/" + fbxFilename + ".unitypackage";
+                    AssetDatabase.ExportPackage(destinationFbx, exportPackagePath, ExportPackageOptions.Recurse | ExportPackageOptions.IncludeDependencies);
+
+                }
             }
 
             Daz3DBridge.BatchConversionMode = -1;
