@@ -79,6 +79,9 @@ namespace Daz3D
 		//DiffusionProfile is sealed in older versions of HDRP, will need to use reflection if we want access to it
 		//public UnityEngine.Rendering.HighDefinition.DiffusionProfile diffusionProfile = null;
 
+		// DB 2025-10-15
+		public bool bUeConversionMode;
+		public bool bUseModelMaterialNames;
 
 		/// <summary>
 		/// These are analagous to the shaders in Daz3D, if your shader is not in this list
@@ -2524,6 +2527,12 @@ namespace Daz3D
             {
 				materialPath = materialDir + "/" + Utilities.ScrubKey(dtuMaterial.ProductComponentName) + "_" + Utilities.ScrubKey(dtuMaterial.MaterialName) + ".mat";
 			}
+			if (bUseModelMaterialNames)
+			{
+				var sSanitizedAssetLabel = Utilities.DazBridgeSanitize(dtuMaterial.AssetLabel);
+				var sSanitizedMaterialName = Utilities.DazBridgeSanitize(dtuMaterial.MaterialName);
+				materialPath = materialDir + "/" + sSanitizedAssetLabel + "_" + sSanitizedMaterialName + ".mat";
+			}
 
 
 			DTUMaterialType materialType = DTUMaterialType.Unknown;
@@ -2799,6 +2808,9 @@ namespace Daz3D
 		public string MaterialType;
 		public string Value;
 
+		// DB 2025-10-15
+		public string AssetLabel;
+
 		public List<DTUMaterialProperty> Properties;
 
 		private Dictionary<string,DTUMaterialProperty> _map;
@@ -2995,6 +3007,9 @@ namespace Daz3D
 				dtuMat.MaterialType = mat["Material Type"].Value;
 				dtuMat.Value = mat["Value"].Value;
 				dtuMat.Properties = new List<DTUMaterialProperty>();
+
+				// DB 2015-10-15
+				dtuMat.AssetLabel = mat["Asset Label"].Value;
 
 				var properties = mat["Properties"];
 				foreach(var propKVP in properties)

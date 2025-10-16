@@ -45,5 +45,28 @@ namespace Daz3D
 		{
 			return color.grayscale;
 		}
+
+		// DB 2025-10-15 (UE Compatible Scrub)
+		public static string DazBridgeSanitize(string src)
+		{
+			// delete space
+			src = src.Replace(" ", "");
+			// convert other chars to "_"
+			src = src.Replace(".", "_");
+			src = src.Replace("(", "_");
+			src = src.Replace(")", "_");
+			src = src.Replace(".", "_");
+			src = src.Replace("&", "_");
+			src = src.Replace("!", "_");
+			src = src.Replace("*", "_");
+			src = src.Replace("<", "_");
+			src = src.Replace(">", "_");
+			src = src.Replace("?", "_");
+			src = src.Replace("\\", "_");
+			src = src.Replace(":", "_");
+			src = src.Replace("'", "_");;
+			return src;
+		}
+
 	}
 }

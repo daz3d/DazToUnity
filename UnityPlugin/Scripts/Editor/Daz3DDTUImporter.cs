@@ -425,10 +425,14 @@ namespace Daz3D
 
             var dtu = DTUConverter.ParseDTUFile(path);
 
+            Debug.Log("Enabling UE Conversion Mode");
+            // DB 2025-10-15
+            dtu.bUeConversionMode = true;
+            dtu.bUseModelMaterialNames = true;
             if (Daz3DBridge.BatchConversionMode == 1)
             {
-                dtu.UseSharedMaterialDir = true;
-                dtu.UseSharedTextureDir = true;
+//                dtu.UseSharedMaterialDir = true;
+//                dtu.UseSharedTextureDir = true;
             }
 
             // DB (2021-05-15): skip DTU import if animation
