@@ -104,6 +104,10 @@ DzUnityDialog::DzUnityDialog(QWidget* parent) :
 	 item = model->findItems("Pose").first();
 	 if (item) item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 
+	 // enable invisible options
+	 m_wFakeDualQuatCheckBox->setVisible(true);
+	 m_wAutoJCMCheckBox->setVisible(true);
+
 	 // Connect new asset type handler
 	 connect(assetTypeCombo, SIGNAL(activated(int)), this, SLOT(HandleAssetTypeComboChange(int)));
 
