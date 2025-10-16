@@ -69,7 +69,7 @@ namespace Daz3D
                     // get container folder
                     var sourcePath = System.IO.Path.GetDirectoryName(dtuPath);
                     var foldername = System.IO.Path.GetFileName(sourcePath);
-                    var localPath = "Assets/BatchConversions/" + foldername;
+                    var localPath = "Assets/" + foldername;
 
                     // create locally in assets if not exists
                     if (System.IO.Directory.Exists(localPath) == false)
@@ -103,6 +103,14 @@ namespace Daz3D
                     {
                         yield return new WaitForEndOfFrame();
                     }
+
+                    // delete dtu
+                    System.IO.File.Delete(dtuFilename);
+
+                    // when import done, export package using unity asset package exporter
+                    var exportPath = "D:/Exports/" + foldername + ".unitypackage";
+                    AssetDatabase.ExportPackage(localPath, exportPath, ExportPackageOptions.Recurse | ExportPackageOptions.IncludeDependencies);
+
                 }
 
             }
@@ -110,6 +118,9 @@ namespace Daz3D
             Daz3DBridge.BatchConversionMode = -1;
             Debug.Log("Batch Conversions Complete.");
 //            yield break;
+
+            // Rename autoexec-jobpool.txt to done
+            System.IO.File.Move("autoexec-jobpool.txt", "autoexec-jobpool.txt.done");
 
             //////////////////////////////
             // SAVE AND EXIT WHEN BATCHMODE

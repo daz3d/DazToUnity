@@ -76,12 +76,12 @@ namespace Daz3D
 		public bool UseSharedTextureDir;
 		public bool UseSharedMaterialDir;
 
-		//DiffusionProfile is sealed in older versions of HDRP, will need to use reflection if we want access to it
-		//public UnityEngine.Rendering.HighDefinition.DiffusionProfile diffusionProfile = null;
-
 		// DB 2025-10-15
 		public bool bUeConversionMode;
 		public bool bUseModelMaterialNames;
+
+		//DiffusionProfile is sealed in older versions of HDRP, will need to use reflection if we want access to it
+		//public UnityEngine.Rendering.HighDefinition.DiffusionProfile diffusionProfile = null;
 
 		/// <summary>
 		/// These are analagous to the shaders in Daz3D, if your shader is not in this list
@@ -2509,9 +2509,9 @@ namespace Daz3D
 
 			var textureDir = materialDir;
 			if (UseSharedTextureDir)
-            {
+			{
 				textureDir = DTUDir + "/Textures";
-            }
+			}
 
 			if(!System.IO.Directory.Exists(materialDir))
 			{
@@ -2529,9 +2529,7 @@ namespace Daz3D
 			}
 			if (bUseModelMaterialNames)
 			{
-				var sSanitizedAssetLabel = Utilities.DazBridgeSanitize(dtuMaterial.AssetLabel);
-				var sSanitizedMaterialName = Utilities.DazBridgeSanitize(dtuMaterial.MaterialName);
-				materialPath = materialDir + "/" + sSanitizedAssetLabel + "_" + sSanitizedMaterialName + ".mat";
+				materialPath = materialDir + "/" + dtuMaterial.SlotName + ".mat";
 			}
 
 
@@ -2710,54 +2708,45 @@ namespace Daz3D
 				return null;
 			}
 
-			var dirname = System.IO.Path.GetDirectoryName(path);
 			var filename = System.IO.Path.GetFileName(path);
 			filename = Utilities.ScrubPath(filename);
+			var ext = System.IO.Path.GetExtension(filename);
+			var basefilename = filename.Replace(ext, "");
 
-			var md5Remote = Utilities.MD5(path);
+			var oSourceMd5 = Utilities.MD5(path);
+			var sDestinationPath = localAssetDir + "/" + basefilename + "_" + oSourceMd5 + ext;
 
-			bool copyRemtoe = true;
-
-			//Does this file already exist locally?
-			var cleanPath = localAssetDir + "/" + filename;
-			if(System.IO.File.Exists(cleanPath))
+			// Compare to source if destination file exists
+			bool bDoCopy = true;
+			if (System.IO.File.Exists(sDestinationPath))
 			{
-				var md5Local = Utilities.MD5(cleanPath);
-
-				if(md5Remote == md5Local)
-				{
-					copyRemtoe = false;
-				}
+				bDoCopy = false;
 			}
 
 			bool dirty = false;
 
-
-
-
-			if (copyRemtoe)
+			if (bDoCopy)
 			{
 				UnityEngine.Debug.Log("Copying file: " + path);
 				// BUGFIX: copyRemote is set to false if file exists OR if MD5 is different, which means overwrite must be turned on
 				try
 				{
-					System.IO.File.Copy(path, cleanPath, true);
+					System.IO.File.Copy(path, sDestinationPath, true);
+					AssetDatabase.Refresh();
 				}
 				catch (System.IO.IOException e)
-                {
-					// BUGFIX: fail gracefully, issue error and continue import...
-					UnityEngine.Debug.LogError("WARNING: Failed to copy texture file, DTU import will continue but there may be missing textures: " + path);
+				{
+					UnityEngine.Debug.LogError(e.ToString());
 				}
-				AssetDatabase.Refresh();
+
 			}
 
-
-			var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(cleanPath);
-			var ti = TextureImporter.GetAtPath(cleanPath) as TextureImporter;
+			var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(sDestinationPath);
+			var ti = TextureImporter.GetAtPath(sDestinationPath) as TextureImporter;
 
 			if(ti == null)
 			{
-				UnityEngine.Debug.LogWarning("Failed to get a texture importer for path: " + cleanPath + " verify texture has the correct settings manually");
+				UnityEngine.Debug.LogWarning("Failed to get a texture importer for path: " + sDestinationPath + " verify texture has the correct settings manually");
 			} else {
 				if(isNormal)
 				{
@@ -2776,9 +2765,9 @@ namespace Daz3D
 				}
 
 				if (isOpacityMap)
-                {
+				{
 					ti.alphaSource = TextureImporterAlphaSource.FromGrayScale;
-                }
+				}
 
 				if(dirty)
 				{
@@ -2786,7 +2775,7 @@ namespace Daz3D
 					ti.SaveAndReimport();
 				}
 
-				if (copyRemtoe)
+				if (bDoCopy)
 				{
 					record?.AddToken("Imported " + ti.textureType + " texture");
 					record?.AddToken(tex.name, tex);
@@ -2810,6 +2799,7 @@ namespace Daz3D
 
 		// DB 2025-10-15
 		public string AssetLabel;
+		public string SlotName;
 
 		public List<DTUMaterialProperty> Properties;
 
@@ -2972,7 +2962,7 @@ namespace Daz3D
 
 			var text = System.IO.File.ReadAllText(path);
 
-			if(text.Length<=0)
+			if (text.Length <= 0)
 			{
 				UnityEngine.Debug.LogError("DTU File: " + path + " is empty");
 				return dtu;
@@ -2992,6 +2982,7 @@ namespace Daz3D
 			dtu.ImportFolder = root["Import Folder"].Value;
 			dtu.Materials = new List<DTUMaterial>();
 
+
 			var materials = root["Materials"].AsArray;
 
 			foreach(var matKVP in materials)
@@ -3010,6 +3001,9 @@ namespace Daz3D
 
 				// DB 2015-10-15
 				dtuMat.AssetLabel = mat["Asset Label"].Value;
+				var sSanitizedAssetLabel = Utilities.DazBridgeSanitize(dtuMat.AssetLabel);
+				var sSanitizedMaterialName = Utilities.DazBridgeSanitize(dtuMat.MaterialName);
+				dtuMat.SlotName = sSanitizedAssetLabel + "_" + sSanitizedMaterialName;
 
 				var properties = mat["Properties"];
 				foreach(var propKVP in properties)
