@@ -1145,10 +1145,20 @@ namespace Daz3D
                 return;
             }
 
-            importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+            // Must do initial import to initialize materials for later extraction
+            importer.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
             importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
-            importer.ExtractTextures(textureFolder);
+            AssetDatabase.WriteImportSettingsIfDirty(fbxPath);
+            importer.SaveAndReimport();
 
+            // Extract textures before materials
+            importer.ExtractTextures(textureFolder);
+            AssetDatabase.Refresh();
+
+            // Save again to link materials to extracted textures
+            importer.SaveAndReimport();
+
+            // Finally extract materials linked to previously extracted textures
             UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(fbxPath);
             foreach (UnityEngine.Object o in assets)
             {
@@ -1162,6 +1172,10 @@ namespace Daz3D
                 }
             }
             AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+            importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
 
             try
             {
