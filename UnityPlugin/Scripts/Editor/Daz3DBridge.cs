@@ -5,7 +5,8 @@
 using UnityEngine;
 using UnityEditor;
 using System;
-
+using UnityEditor.SceneManagement;
+using Codice.Utils;
 
 namespace Daz3D
 {
@@ -77,12 +78,18 @@ namespace Daz3D
                     var sourcePath = System.IO.Path.GetDirectoryName(dtuPath);
                     var foldername = System.IO.Path.GetFileName(sourcePath);
                     var localPath = "Assets/" + foldername;
+                    var demoPath = localPath + "/Demo";
 
                     // create locally in assets if not exists
                     if (System.IO.Directory.Exists(localPath) == false)
                     {
                         System.IO.Directory.CreateDirectory(localPath);
                     }
+                    if (System.IO.Directory.Exists(demoPath) == false)
+                    {
+                        System.IO.Directory.CreateDirectory(demoPath);
+                    }
+
                     if (System.IO.File.Exists(localPath + "/" + dtuFilename) == false)
                     {
                         // copy DTU to local container
@@ -102,6 +109,8 @@ namespace Daz3D
                         AssetDatabase.Refresh();
                     }
 
+                    UnityEngine.SceneManagement.Scene newScene = EditorSceneManager.OpenScene("Assets/OutdoorsScene.unity", OpenSceneMode.Single);
+
                     // importDTU
                     ReadyToImport = false;
                     Daz3DDTUImporter.Import(localPath + "/" + dtuFilename, localPath + "/" + fbxFilename);
@@ -111,12 +120,31 @@ namespace Daz3D
                         yield return new WaitForEndOfFrame();
                     }
 
+                    UnityEditor.SceneManagement.EditorSceneManager.SaveScene(newScene, demoPath + "/DemoScene.unity");
+
                     // delete dtu
-                    System.IO.File.Delete(dtuFilename);
+                    System.IO.File.Delete(localPath + "/" + dtuFilename);
 
                     // when import done, export package using unity asset package exporter
-                    var exportPath = "D:/Exports/" + foldername + ".unitypackage";
-                    AssetDatabase.ExportPackage(localPath + "/" + fbxFilename, exportPath, ExportPackageOptions.Recurse | ExportPackageOptions.IncludeDependencies);
+                    var shaderFolder = "Assets/Daz3D/Shaders";
+                    var diffusionFolder = "Assets/Daz3D/DiffusionProfiles";
+                    var exportShaderFolder = localPath + "/Shaders";
+                    var exportDiffusionFolder = localPath + "/DiffusionProfiles";
+                    var exportPackagePath = "D:/Exports/" + foldername + ".unitypackage";
+
+                    // copy shader and diffusion profile folders to asset folder
+                    if (System.IO.Directory.Exists(shaderFolder)) {
+                        FileUtil.CopyFileOrDirectory(shaderFolder, exportShaderFolder);
+                    }
+                    if (System.IO.Directory.Exists(diffusionFolder)) {
+                        FileUtil.CopyFileOrDirectory(diffusionFolder, exportDiffusionFolder);
+                    }
+
+                    AssetDatabase.Refresh();
+
+                    // localPath --> fbxPath, prefab, materials, shaders, diffusion profile
+                    string[] pathsToExport = new string[] { localPath };
+                    AssetDatabase.ExportPackage(pathsToExport, exportPackagePath, ExportPackageOptions.Recurse);
 
                 }
 
@@ -153,9 +181,21 @@ namespace Daz3D
                     // Extract textures and materials
                     var textureFolder = destinationFolder + "/Textures";
                     var materialFolder = destinationFolder + "/Materials";
+                    var prefabFolder = destinationFolder + "/Prefabs";
+                    var demoFolder = destinationFolder + "/Demo";
+
                     if (!System.IO.Directory.Exists(textureFolder)) System.IO.Directory.CreateDirectory(textureFolder);
                     if (!System.IO.Directory.Exists(materialFolder)) System.IO.Directory.CreateDirectory(materialFolder);
+                    if (!System.IO.Directory.Exists(prefabFolder)) System.IO.Directory.CreateDirectory(prefabFolder);
+                    if (!System.IO.Directory.Exists(demoFolder)) System.IO.Directory.CreateDirectory(demoFolder);
+
                     Daz3DDTUImporter.ExtractAndAssignFbxImporterMaterials(destinationFbx, textureFolder, materialFolder);
+
+                    UnityEngine.SceneManagement.Scene newScene = EditorSceneManager.OpenScene("Assets/OutdoorsScene.unity", OpenSceneMode.Single);
+                    var fbxPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(destinationFbx);
+                    var workingInstance = Instantiate(fbxPrefab);
+                    var prefab = PrefabUtility.SaveAsPrefabAssetAndConnect(workingInstance, prefabFolder + "/" + fbxFilename + "_Prefab.prefab", InteractionMode.AutomatedAction);
+                    UnityEditor.SceneManagement.EditorSceneManager.SaveScene(newScene, demoFolder + "/DemoScene.unity");
 
                     // when import done, export package using unity asset package exporter
                     var exportPackagePath = "D:/Exports/" + fbxFilename + ".unitypackage";
@@ -172,9 +212,8 @@ namespace Daz3D
             System.IO.File.Move("autoexec-jobpool.txt", "autoexec-jobpool.txt.done");
 
             //////////////////////////////
-            // SAVE AND EXIT WHEN BATCHMODE
+            // EXIT WHEN BATCHMODE
             //////////////////////////////
-            EditorApplication.SaveScene(EditorApplication.currentScene);
             EditorApplication.Exit(0);
         }
 
