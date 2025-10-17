@@ -134,10 +134,10 @@ namespace Daz3D
 
                     // copy shader and diffusion profile folders to asset folder
                     if (System.IO.Directory.Exists(shaderFolder)) {
-                        FileUtil.CopyFileOrDirectory(shaderFolder, exportShaderFolder);
+                        FileUtil.MoveFileOrDirectory(shaderFolder, exportShaderFolder);
                     }
                     if (System.IO.Directory.Exists(diffusionFolder)) {
-                        FileUtil.CopyFileOrDirectory(diffusionFolder, exportDiffusionFolder);
+                        FileUtil.MoveFileOrDirectory(diffusionFolder, exportDiffusionFolder);
                     }
 
                     AssetDatabase.Refresh();
