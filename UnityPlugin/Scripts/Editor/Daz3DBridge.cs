@@ -198,7 +198,7 @@ namespace Daz3D
                     UnityEditor.SceneManagement.EditorSceneManager.SaveScene(newScene, demoFolder + "/DemoScene.unity");
 
                     // when import done, export package using unity asset package exporter
-                    var exportPackagePath = "D:/Exports/" + fbxFilename + ".unitypackage";
+                    var exportPackagePath = "D:/Exports/" + foldername + ".unitypackage";
                     AssetDatabase.ExportPackage(destinationFolder, exportPackagePath, ExportPackageOptions.Recurse);
 
                 }
